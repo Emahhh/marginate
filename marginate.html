@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>PDF Merger</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.orange.min.css"
+    >
+
+    <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
+    <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+</head>
+
+<body>
+    <main class="container">
+        <p>Enter the URLs of the PDFs to embed with <code>pdf-lib</code></p>
+        <p>Use ths for cors: <code>https://corsproxy.io/?url=</code></p>
+        <input type="text" id="backgroundPdfUrl" value="http://localhost:3000/examples/a1.pdf" placeholder="Background PDF URL">
+        <input type="text" id="foregroundPdfUrl" value="http://localhost:3000/examples/slides.pdf" placeholder="Foreground PDF URL">
+        <button onclick="onDownloadButtonClick()">Scarica PDF</button>
+        <button onclick="onOpenButtonClick()">Apri PDF in nuova scheda</button>
+
+        <br />
+        <br />
+        <p>Preview (first page only):</p>
+        <iframe id="pdfPreview" width="100%" height="500px"></iframe>
+    </main>
+</body>
+
+<script>
+    const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+    async function fetchPdfBytes(url) {
+        return await fetch(url).then(res => res.arrayBuffer());
+    }
+
+    async function getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, pagesLimit=Infinity) {
+        const backgroundPdfBytes = await fetchPdfBytes(backgroundPdfUrl);
+        const basePdfDoc = await PDFDocument.load(backgroundPdfBytes);
+        const backgroundPageIndex = 0;
+        const backgroundPage = basePdfDoc.getPages()[backgroundPageIndex];
+
+        const foregroundPdfBytes = await fetchPdfBytes(foregroundPdfUrl);
+        const foregroundPdfDoc = await PDFDocument.load(foregroundPdfBytes);
+        const foregroundPdfPages = foregroundPdfDoc.getPages();
+
+        const resultPdfDoc = await PDFDocument.create();
+        const helveticaFont = await resultPdfDoc.embedFont(StandardFonts.Helvetica);
+
+        let i = 0;
+        for (const currSourcePage of foregroundPdfPages) {
+            if (i++ >= pagesLimit) break;
+
+            const embeddedBackgroundPage = await resultPdfDoc.embedPage(backgroundPage);
+            const embeddedCurrSourcePage = await resultPdfDoc.embedPage(currSourcePage);
+
+            const currentResultPage = resultPdfDoc.addPage([backgroundPage.getWidth(), backgroundPage.getHeight()]);
+
+            currentResultPage.drawPage(embeddedBackgroundPage, {
+                x: 0,
+                y: 0,
+                width: currentResultPage.getWidth(),
+                height: currentResultPage.getHeight(),
+            });
+
+            const centerX = (currentResultPage.getWidth() - currSourcePage.getWidth()) / 2;
+            const centerY = (currentResultPage.getHeight() - currSourcePage.getHeight()) / 2;
+
+            currentResultPage.drawPage(embeddedCurrSourcePage, {
+                x: centerX,
+                y: centerY,
+                width: currSourcePage.getWidth(),
+                height: currSourcePage.getHeight(),
+            });
+
+            // Add watermark
+            const watermarkText = "Add margins to help you take notes using marginate";
+            const textSize = 10;
+            const textWidth = helveticaFont.widthOfTextAtSize(watermarkText, textSize);
+            const textHeight = helveticaFont.heightAtSize(textSize);
+            const x = currentResultPage.getWidth() - textWidth - 10;
+            const y = 10;
+
+            currentResultPage.drawText(watermarkText, {
+                x: x,
+                y: y,
+                size: textSize,
+                font: helveticaFont,
+                color: rgb(0.5, 0.5, 0.5),
+            });
+        }
+
+        return await resultPdfDoc.save();
+    }
+
+    async function updatePdfPreview() {
+        const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
+        const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
+        try {
+            const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, 1); // Only first page
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            console.log("Blob URL for preview:", url);
+            document.getElementById('pdfPreview').src = url;
+        } catch (error) {
+            console.error("Error updating PDF preview:", error);
+            // alert("An error occurred while updating the PDF preview. Please check the console for more details.");
+        }
+    }
+
+    async function onDownloadButtonClick() {
+        const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
+        const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
+        try {
+            const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl);
+            download(pdfBytes, "marginate_prova.pdf", "application/pdf");
+        } catch (error) {
+            console.error("Error creating PDF:", error);
+            alert("An error occurred while creating the PDF. Please check the console for more details.");
+        }
+    }
+
+    async function onOpenButtonClick() {
+        const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
+        const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
+        try {
+            const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl);
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            console.info("Blob URL for new tab:", url);
+            window.open(url, '_blank');
+        } catch (error) {
+            console.error("Error opening PDF in new tab:", error);
+            alert("An error occurred while opening the PDF in a new tab. Please check the console for more details.");
+        }
+    }
+
+    document.getElementById('backgroundPdfUrl').addEventListener('input', updatePdfPreview);
+    document.getElementById('foregroundPdfUrl').addEventListener('input', updatePdfPreview);
+
+    // Initial preview
+    updatePdfPreview();
+</script>
+
+</html>
