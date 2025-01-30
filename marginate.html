@@ -44,9 +44,13 @@
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
 
     async function fetchPdfBytes(url) {
-        return await fetch(url).then(res => res.arrayBuffer());
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch PDF from ${url}: ${response.status} ${response.statusText}`);
+        }
+        return await response.arrayBuffer();
     }
-
+    
     async function getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, pagesLimit=Infinity) {
         const backgroundPdfBytes = await fetchPdfBytes(backgroundPdfUrl);
         const basePdfDoc = await PDFDocument.load(backgroundPdfBytes);
