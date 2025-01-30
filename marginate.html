@@ -16,17 +16,26 @@
 
 <body>
     <main class="container">
+        <h1>PDF Merger</h1>
         <p>Enter the URLs of the PDFs to embed with <code>pdf-lib</code></p>
-        <p>Use ths for cors: <code>https://corsproxy.io/?url=</code></p>
-        <input type="text" id="backgroundPdfUrl" value="http://localhost:3000/examples/a1.pdf" placeholder="Background PDF URL">
-        <input type="text" id="foregroundPdfUrl" value="http://localhost:3000/examples/slides.pdf" placeholder="Foreground PDF URL">
-        <button onclick="onDownloadButtonClick()">Scarica PDF</button>
-        <button onclick="onOpenButtonClick()">Apri PDF in nuova scheda</button>
+        <p>Use this for CORS: <code>https://corsproxy.io/?url=</code></p>
+        <p>Example PDFs here: <a href="https://github.com/Emahhh/marginate/tree/main/examples" target="_blank" rel="noopener">https://github.com/Emahhh/marginate/tree/main/examples</a></p>
+        
+        <label for="backgroundPdfUrl">Background PDF URL:</label>
+        <input type="text" id="backgroundPdfUrl" value="https://emahhh.github.io/marginate/examples/a1.pdf" placeholder="Background PDF URL">
+        
+        <label for="foregroundPdfUrl">Foreground PDF URL:</label>
+        <input type="text" id="foregroundPdfUrl" value="https://emahhh.github.io/marginate/examples/slides.pdf" placeholder="Foreground PDF URL">
+        
+        <div class="">
+            <button class="primary" onclick="onDownloadButtonClick()">Download PDF</button>
+            <button class="secondary" onclick="onOpenButtonClick()">Open PDF in New Tab</button>
+        </div>
 
         <br />
         <br />
         <p>Preview (first page only):</p>
-        <iframe id="pdfPreview" width="100%" height="500px"></iframe>
+        <iframe id="pdfPreview" width="100%" height="500px" style="border: 1px solid #ccc;"></iframe>
     </main>
 </body>
 
