@@ -35,6 +35,7 @@
         <br />
         <br />
         <p>Preview (first page only):</p>
+        <p id="errorMessage" style="color: red; display: none;">An error occurred while generating the preview.</p>
         <iframe id="pdfPreview" width="100%" height="500px" style="border: 1px solid #ccc;"></iframe>
     </main>
 </body>
@@ -106,6 +107,10 @@
     }
 
     async function updatePdfPreview() {
+        const errorMessageElement = document.getElementById('errorMessage');
+        errorMessageElement.style.display = 'none';
+        errorMessageElement.textContent = '';
+
         const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
         const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
         try {
@@ -116,7 +121,8 @@
             document.getElementById('pdfPreview').src = url;
         } catch (error) {
             console.error("Error updating PDF preview:", error);
-            // alert("An error occurred while updating the PDF preview. Please check the console for more details.");
+            errorMessageElement.style.display = 'block';
+            errorMessageElement.textContent = `An error occurred while generating the preview: ${error.message}`;
         }
     }
 
