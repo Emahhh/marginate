@@ -112,9 +112,6 @@
 
     async function updatePdfPreview() {
         const errorMessageElement = document.getElementById('errorMessage');
-        errorMessageElement.style.display = 'none';
-        errorMessageElement.textContent = '';
-    
         const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
         const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
     
@@ -122,23 +119,30 @@
         const currentBackgroundPdfUrl = backgroundPdfUrl;
         const currentForegroundPdfUrl = foregroundPdfUrl;
     
+        // Funzione helper per verificare se gli URL sono ancora gli stessi
+        const urlsAreCurrent = () => 
+            currentBackgroundPdfUrl === document.getElementById('backgroundPdfUrl').value &&
+            currentForegroundPdfUrl === document.getElementById('foregroundPdfUrl').value;
+    
+        // Nasconde il messaggio di errore
+        errorMessageElement.style.display = 'none';
+        errorMessageElement.textContent = '';
+    
         try {
             const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, 1); // Only first page
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             console.log("Blob URL for preview:", url);
     
-            // Verifica se gli URL sono ancora gli stessi: se l'utente ha cambiato URL durante il caricamento, buttiamo via il risultato
-            if (currentBackgroundPdfUrl === document.getElementById('backgroundPdfUrl').value &&
-                currentForegroundPdfUrl === document.getElementById('foregroundPdfUrl').value) {
+            // Verifica se gli URL sono ancora gli stessi
+            if (urlsAreCurrent()) {
                 document.getElementById('pdfPreview').src = url;
             }
         } catch (error) {
             console.error("Error updating PDF preview:", error);
     
-            // Verifica se gli URL sono ancora gli stessi: se l'utente ha cambiato URL durante il caricamento, buttiamo via il risultato
-            if (currentBackgroundPdfUrl === document.getElementById('backgroundPdfUrl').value &&
-                currentForegroundPdfUrl === document.getElementById('foregroundPdfUrl').value) {
+            // Verifica se gli URL sono ancora gli stessi
+            if (urlsAreCurrent()) {
                 errorMessageElement.style.display = 'block';
                 errorMessageElement.textContent = `An error occurred while generating the preview: ${error.message}`;
             }
