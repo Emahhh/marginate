@@ -34,12 +34,31 @@
         <p>Use this for CORS: <code>https://corsproxy.io/?url=</code></p>
         <p>Example PDFs here: <a href="https://github.com/Emahhh/marginate/tree/main/examples" target="_blank" rel="noopener">https://github.com/Emahhh/marginate/tree/main/examples</a></p>
         
-        <label for="backgroundPdfUrl">Background PDF URL:</label>
-        <input type="text" id="backgroundPdfUrl" value="https://emahhh.github.io/marginate/examples/a1.pdf" placeholder="Background PDF URL">
-        
-        <label for="foregroundPdfUrl">Foreground PDF URL:</label>
-        <input type="text" id="foregroundPdfUrl" value="https://emahhh.github.io/marginate/examples/slides.pdf" placeholder="Foreground PDF URL">
-        
+        <article>
+            <div class="grid">
+                <div>
+                    <label for="backgroundPdfUrl">Background PDF URL:</label>
+                    <input type="text" id="backgroundPdfUrl" value="https://emahhh.github.io/marginate/examples/a1.pdf" placeholder="Background PDF URL">
+                    
+                    <label for="foregroundPdfUrl">Foreground PDF URL:</label>
+                    <input type="text" id="foregroundPdfUrl" value="https://emahhh.github.io/marginate/examples/slides.pdf" placeholder="Foreground PDF URL">
+
+                    <div class="example-buttons">
+                        <button class="primary" onclick="onDownloadButtonClick()">Download PDF</button>
+                        <button class="secondary" onclick="onOpenButtonClick()">Open PDF in New Tab</button>
+                    </div>
+
+                </div>
+
+                <div>
+                    <p>Preview (first page only):</p>
+                    <p id="errorMessage" style="color: red; display: none;">An error occurred while generating the preview.</p>
+                    <iframe id="pdfPreview" width="100%" height="500px" style="border: 1px solid #ccc;"></iframe>
+                </div>
+
+            </div>
+        </article>
+
         <div id="examplesContainer">
             <h3>Examples</h3>
             <p>Click on an example to put the corresponding URL input field.</p>
@@ -52,17 +71,7 @@
                 <ul class="example-buttons"></ul>
             </div>
         </div>
-
-        <div class="">
-            <button class="primary" onclick="onDownloadButtonClick()">Download PDF</button>
-            <button class="secondary" onclick="onOpenButtonClick()">Open PDF in New Tab</button>
-        </div>
-
-        <br />
-        <br />
-        <p>Preview (first page only):</p>
-        <p id="errorMessage" style="color: red; display: none;">An error occurred while generating the preview.</p>
-        <iframe id="pdfPreview" width="100%" height="500px" style="border: 1px solid #ccc;"></iframe>
+        
     </main>
 </body>
 
