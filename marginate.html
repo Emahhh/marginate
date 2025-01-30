@@ -9,6 +9,19 @@
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.orange.min.css"
     >
+    <style>
+        .example-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .example-buttons li {
+            list-style: none;
+        }
+        .example-buttons button {
+            margin: 5px;
+        }
+    </style>
 
     <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7"></script>
@@ -27,6 +40,19 @@
         <label for="foregroundPdfUrl">Foreground PDF URL:</label>
         <input type="text" id="foregroundPdfUrl" value="https://emahhh.github.io/marginate/examples/slides.pdf" placeholder="Foreground PDF URL">
         
+        <div id="examplesContainer">
+            <h3>Examples</h3>
+            <p>Click on an example to put the corresponding URL input field.</p>
+            <div id="backgroundExamples">
+                <h4>Background URLs</h4>
+                <ul class="example-buttons"></ul>
+            </div>
+            <div id="foregroundExamples">
+                <h4>Foreground URLs</h4>
+                <ul class="example-buttons"></ul>
+            </div>
+        </div>
+
         <div class="">
             <button class="primary" onclick="onDownloadButtonClick()">Download PDF</button>
             <button class="secondary" onclick="onOpenButtonClick()">Open PDF in New Tab</button>
@@ -42,6 +68,52 @@
 
 <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+    // PDF EXAMPLES
+    {
+        document.addEventListener('DOMContentLoaded', populateExamples);
+
+        const examples = {
+            background: [
+                { name: "foglio a1 con quadretti gialli", url: "https://emahhh.github.io/marginate/examples/a1.pdf" },
+                { name: "foglio a2 con quadretti gialli", url: "https://emahhh.github.io/marginate/examples/a2.pdf" },
+                { name: "foglio a3 con quadretti gialli", url: "https://emahhh.github.io/marginate/examples/a3.pdf" }
+            ],
+            foreground: [
+                { name: "slides unipi about time series con CORS", url: "https://corsproxy.io/?url=https://didawiki.cli.di.unipi.it/lib/exe/fetch.php/dm/time_series_from_keogh_tutorial.pdf" },
+                { name: "slides TEST", url: "https://emahhh.github.io/marginate/examples/slides.pdf" }
+            ]
+        };
+
+        function setExampleUrl(type, url) {
+            const inputElement = document.getElementById(`${type}PdfUrl`);
+            inputElement.value = url;
+            inputElement.dispatchEvent(new Event('input'));
+        }
+
+        function populateExamples() {
+            const backgroundExamplesContainer = document.getElementById('backgroundExamples').querySelector('ul');
+            const foregroundExamplesContainer = document.getElementById('foregroundExamples').querySelector('ul');
+
+            examples.background.forEach(example => {
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.textContent = example.name;
+                button.onclick = () => setExampleUrl('background', example.url);
+                li.appendChild(button);
+                backgroundExamplesContainer.appendChild(li);
+            });
+
+            examples.foreground.forEach(example => {
+                const li = document.createElement('li');
+                const button = document.createElement('button');
+                button.textContent = example.name;
+                button.onclick = () => setExampleUrl('foreground', example.url);
+                li.appendChild(button);
+                foregroundExamplesContainer.appendChild(li);
+            });
+        }
+    }
 
     async function fetchPdfBytes(url) {
         const response = await fetch(url);
