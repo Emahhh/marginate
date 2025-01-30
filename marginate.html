@@ -114,19 +114,34 @@
         const errorMessageElement = document.getElementById('errorMessage');
         errorMessageElement.style.display = 'none';
         errorMessageElement.textContent = '';
-
+    
         const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
         const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
+    
+        // Memorizza gli URL correnti
+        const currentBackgroundPdfUrl = backgroundPdfUrl;
+        const currentForegroundPdfUrl = foregroundPdfUrl;
+    
         try {
             const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, 1); // Only first page
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             console.log("Blob URL for preview:", url);
-            document.getElementById('pdfPreview').src = url;
+    
+            // Verifica se gli URL sono ancora gli stessi: se l'utente ha cambiato URL durante il caricamento, buttiamo via il risultato
+            if (currentBackgroundPdfUrl === document.getElementById('backgroundPdfUrl').value &&
+                currentForegroundPdfUrl === document.getElementById('foregroundPdfUrl').value) {
+                document.getElementById('pdfPreview').src = url;
+            }
         } catch (error) {
             console.error("Error updating PDF preview:", error);
-            errorMessageElement.style.display = 'block';
-            errorMessageElement.textContent = `An error occurred while generating the preview: ${error.message}`;
+    
+            // Verifica se gli URL sono ancora gli stessi: se l'utente ha cambiato URL durante il caricamento, buttiamo via il risultato
+            if (currentBackgroundPdfUrl === document.getElementById('backgroundPdfUrl').value &&
+                currentForegroundPdfUrl === document.getElementById('foregroundPdfUrl').value) {
+                errorMessageElement.style.display = 'block';
+                errorMessageElement.textContent = `An error occurred while generating the preview: ${error.message}`;
+            }
         }
     }
 
