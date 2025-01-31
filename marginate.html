@@ -104,23 +104,17 @@
             const backgroundExamplesContainer = document.getElementById('backgroundExamples').querySelector('ul');
             const foregroundExamplesContainer = document.getElementById('foregroundExamples').querySelector('ul');
 
-            examples.background.forEach(example => {
-                const li = document.createElement('li');
-                const button = document.createElement('button');
-                button.textContent = example.name;
-                button.onclick = () => setExampleUrl('background', example.url);
-                li.appendChild(button);
-                backgroundExamplesContainer.appendChild(li);
-            });
+            backgroundExamplesContainer.innerHTML = examples.background.map(example => /*html*/`
+                <li>
+                    <button onclick="setExampleUrl('background', '${example.url}')">${example.name}</button>
+                </li>
+            `).join('');
 
-            examples.foreground.forEach(example => {
-                const li = document.createElement('li');
-                const button = document.createElement('button');
-                button.textContent = example.name;
-                button.onclick = () => setExampleUrl('foreground', example.url);
-                li.appendChild(button);
-                foregroundExamplesContainer.appendChild(li);
-            });
+            foregroundExamplesContainer.innerHTML = examples.foreground.map(example => /*html*/`
+                <li>
+                    <button onclick="setExampleUrl('foreground', '${example.url}')">${example.name}</button>
+                </li>
+            `).join('');
         }
     }
 
