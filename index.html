@@ -30,7 +30,7 @@
 <body>
     <main class="container">
         <h1>PDF Merger</h1>
-        <p>Enter the URLs of the PDFs to embed with <code>pdf-lib</code></p>
+        <p>Enter the URLs of the PDFs to embed with <code>pdf-lib</code>, or upload them from your OS.</p>
         <p>Use this for CORS: <code>https://corsproxy.io/?url=</code></p>
         <p>Example PDFs here: <a href="https://github.com/Emahhh/marginate/tree/main/examples" target="_blank" rel="noopener">https://github.com/Emahhh/marginate/tree/main/examples</a></p>
         
@@ -40,8 +40,14 @@
                     <label for="backgroundPdfUrl">Background PDF URL:</label>
                     <input type="text" id="backgroundPdfUrl" value="https://emahhh.github.io/marginate/examples/a1.pdf" placeholder="Background PDF URL">
                     
+                    <label for="backgroundPdfUpload">Upload Background PDF:</label>
+                    <input type="file" id="backgroundPdfUpload" accept="application/pdf">
+
                     <label for="foregroundPdfUrl">Foreground PDF URL:</label>
                     <input type="text" id="foregroundPdfUrl" value="https://emahhh.github.io/marginate/examples/slides.pdf" placeholder="Foreground PDF URL">
+
+                    <label for="foregroundPdfUpload">Upload Foreground PDF:</label>
+                    <input type="file" id="foregroundPdfUpload" accept="application/pdf">
 
                     <div class="example-buttons">
                         <button class="primary" onclick="onDownloadButtonClick()">Download PDF</button>
@@ -77,6 +83,10 @@
 
 <script>
     const { PDFDocument, StandardFonts, rgb } = PDFLib;
+
+    // Store in-memory file bytes (if uploaded)
+    let backgroundFileBytes = null;
+    let foregroundFileBytes = null;
 
     // PDF EXAMPLES
     {
@@ -118,7 +128,30 @@
         }
     }
 
-    async function fetchPdfBytes(url) {
+    // Listen for file uploads
+    document.getElementById('backgroundPdfUpload').addEventListener('change', async (event) => {
+        if (event.target.files && event.target.files[0]) {
+            backgroundFileBytes = await event.target.files[0].arrayBuffer();
+        } else {
+            backgroundFileBytes = null;
+        }
+        updatePdfPreview();
+    });
+
+    document.getElementById('foregroundPdfUpload').addEventListener('change', async (event) => {
+        if (event.target.files && event.target.files[0]) {
+            foregroundFileBytes = await event.target.files[0].arrayBuffer();
+        } else {
+            foregroundFileBytes = null;
+        }
+        updatePdfPreview();
+    });
+
+    // Modified fetch function that also uses uploaded file bytes if available
+    async function fetchPdfBytesOrFile(url, fileBytes) {
+        if (fileBytes) {
+            return fileBytes;
+        }
         const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Failed to fetch PDF from ${url}: ${response.status} ${response.statusText}`);
@@ -127,12 +160,12 @@
     }
     
     async function getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, pagesLimit=Infinity) {
-        const backgroundPdfBytes = await fetchPdfBytes(backgroundPdfUrl);
+        const backgroundPdfBytes = await fetchPdfBytesOrFile(backgroundPdfUrl, backgroundFileBytes);
         const basePdfDoc = await PDFDocument.load(backgroundPdfBytes);
         const backgroundPageIndex = 0;
         const backgroundPage = basePdfDoc.getPages()[backgroundPageIndex];
 
-        const foregroundPdfBytes = await fetchPdfBytes(foregroundPdfUrl);
+        const foregroundPdfBytes = await fetchPdfBytesOrFile(foregroundPdfUrl, foregroundFileBytes);
         const foregroundPdfDoc = await PDFDocument.load(foregroundPdfBytes);
         const foregroundPdfPages = foregroundPdfDoc.getPages();
 
