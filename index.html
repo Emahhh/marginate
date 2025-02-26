@@ -160,7 +160,6 @@
     }
     
 
-    // TODO: refactor thid function in abetter way, this is not good practice to have a function that takes the url as a parameter, but then can actually use the uploaded file
     async function createMergedPdf(backgroundUrl, backgroundBytes, foregroundUrl, foregroundBytes, pagesLimit = Infinity) {
         const backgroundPdfBytes = await fetchPdfBytesOrFile(backgroundUrl, backgroundBytes);
         const basePdfDoc = await PDFDocument.load(backgroundPdfBytes);
@@ -174,11 +173,14 @@
         const resultPdfDoc = await PDFDocument.create();
         const helveticaFont = await resultPdfDoc.embedFont(StandardFonts.Helvetica);
 
+        // Embed the background page once and reuse
+        const embeddedBackgroundPage = await resultPdfDoc.embedPage(backgroundPage);
+
         let i = 0;
         for (const currSourcePage of foregroundPdfPages) {
             if (i++ >= pagesLimit) break;
 
-            const embeddedBackgroundPage = await resultPdfDoc.embedPage(backgroundPage);
+            // Embed the current foreground page
             const embeddedCurrSourcePage = await resultPdfDoc.embedPage(currSourcePage);
 
             const currentResultPage = resultPdfDoc.addPage([backgroundPage.getWidth(), backgroundPage.getHeight()]);
@@ -204,7 +206,6 @@
             const watermarkText = "Add margins to help you take notes using marginate";
             const textSize = 10;
             const textWidth = helveticaFont.widthOfTextAtSize(watermarkText, textSize);
-            const textHeight = helveticaFont.heightAtSize(textSize);
             const x = currentResultPage.getWidth() - textWidth - 10;
             const y = 10;
 
@@ -250,14 +251,12 @@
             const url = URL.createObjectURL(blob);
             console.log("Blob URL for preview:", url);
     
-            // Verifica se gli URL sono ancora gli stessi
             if (urlsAreCurrent()) {
                 document.getElementById('pdfPreview').src = url;
             }
         } catch (error) {
             console.error("Error updating PDF preview:", error);
     
-            // Verifica se gli URL sono ancora gli stessi
             if (urlsAreCurrent()) {
                 errorMessageElement.style.display = 'block';
                 errorMessageElement.textContent = `An error occurred while generating the preview: ${error.message}`;
@@ -276,7 +275,7 @@
                 foregroundFileBytes
             );
 
-            // Get the actual file name (if uploaded) or parse it from the URL
+            // Determine output file name
             let fileName = '';
             const fileInput = document.getElementById('foregroundPdfUpload');
             if (foregroundFileBytes && fileInput.files[0]) {
