@@ -159,13 +159,15 @@
         return await response.arrayBuffer();
     }
     
-    async function getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, pagesLimit=Infinity) {
-        const backgroundPdfBytes = await fetchPdfBytesOrFile(backgroundPdfUrl, backgroundFileBytes);
+
+    // TODO: refactor thid function in abetter way, this is not good practice to have a function that takes the url as a parameter, but then can actually use the uploaded file
+    async function createMergedPdf(backgroundUrl, backgroundBytes, foregroundUrl, foregroundBytes, pagesLimit = Infinity) {
+        const backgroundPdfBytes = await fetchPdfBytesOrFile(backgroundUrl, backgroundBytes);
         const basePdfDoc = await PDFDocument.load(backgroundPdfBytes);
         const backgroundPageIndex = 0;
         const backgroundPage = basePdfDoc.getPages()[backgroundPageIndex];
 
-        const foregroundPdfBytes = await fetchPdfBytesOrFile(foregroundPdfUrl, foregroundFileBytes);
+        const foregroundPdfBytes = await fetchPdfBytesOrFile(foregroundUrl, foregroundBytes);
         const foregroundPdfDoc = await PDFDocument.load(foregroundPdfBytes);
         const foregroundPdfPages = foregroundPdfDoc.getPages();
 
@@ -237,7 +239,13 @@
         errorMessageElement.textContent = '';
     
         try {
-            const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl, 1); // Only first page
+            const pdfBytes = await createMergedPdf(
+                backgroundPdfUrl,
+                backgroundFileBytes,
+                foregroundPdfUrl,
+                foregroundFileBytes,
+                1 // only the first page!!!
+            );
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             console.log("Blob URL for preview:", url);
@@ -261,13 +269,24 @@
         const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
         const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
         try {
-            const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl);
-            
-            // Extract name from the foreground PDF URL
-            const parts = foregroundPdfUrl.split('/');
-            const fileName = parts[parts.length - 1].replace(/\.pdf$/, '');
+            const pdfBytes = await createMergedPdf(
+                backgroundPdfUrl,
+                backgroundFileBytes,
+                foregroundPdfUrl,
+                foregroundFileBytes
+            );
+
+            // Get the actual file name (if uploaded) or parse it from the URL
+            let fileName = '';
+            const fileInput = document.getElementById('foregroundPdfUpload');
+            if (foregroundFileBytes && fileInput.files[0]) {
+                fileName = fileInput.files[0].name.replace(/\.pdf$/i, '');
+            } else {
+                const parts = foregroundPdfUrl.split('/');
+                fileName = parts[parts.length - 1].replace(/\.pdf$/i, '') || 'merged-file';
+            }
+
             const outputName = fileName + '-marginate.pdf';
-    
             download(pdfBytes, outputName, "application/pdf");
         } catch (error) {
             console.error("Error creating PDF:", error);
@@ -279,7 +298,12 @@
         const backgroundPdfUrl = document.getElementById('backgroundPdfUrl').value;
         const foregroundPdfUrl = document.getElementById('foregroundPdfUrl').value;
         try {
-            const pdfBytes = await getMergedPdf(backgroundPdfUrl, foregroundPdfUrl);
+            const pdfBytes = await createMergedPdf(
+                backgroundPdfUrl,
+                backgroundFileBytes,
+                foregroundPdfUrl,
+                foregroundFileBytes
+            );
             const blob = new Blob([pdfBytes], { type: 'application/pdf' });
             const url = URL.createObjectURL(blob);
             console.info("Blob URL for new tab:", url);
