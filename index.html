@@ -25,6 +25,7 @@
 
     <script src="https://unpkg.com/pdf-lib@1.4.0"></script>
     <script src="https://unpkg.com/downloadjs@1.4.7"></script>
+    <script src="libs/coherentpdf.browser.min.js"></script>
 </head>
 
 <body>
@@ -217,9 +218,18 @@
                 color: rgb(0.5, 0.5, 0.5),
             });
         }
-
-        return await resultPdfDoc.save();
+    
+        // compressing the PDF using coherentpdf
+        const pdfBytes = await resultPdfDoc.save();
+        const cpdfObject = coherentpdf.fromMemory(pdfBytes, "");
+        coherentpdf.squeezeInMemory(cpdfObject);
+        const compressedPdfBytes = coherentpdf.toMemory(cpdfObject, false, false);
+    
+        return compressedPdfBytes;
     }
+
+
+    
 
     async function updatePdfPreview() {
         const errorMessageElement = document.getElementById('errorMessage');
