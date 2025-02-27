@@ -166,50 +166,50 @@
         const basePdfDoc = await PDFDocument.load(backgroundPdfBytes);
         const backgroundPageIndex = 0;
         const backgroundPage = basePdfDoc.getPages()[backgroundPageIndex];
-
+    
         const foregroundPdfBytes = await fetchPdfBytesOrFile(foregroundUrl, foregroundBytes);
         const foregroundPdfDoc = await PDFDocument.load(foregroundPdfBytes);
         const foregroundPdfPages = foregroundPdfDoc.getPages();
-
+    
         const resultPdfDoc = await PDFDocument.create();
         const helveticaFont = await resultPdfDoc.embedFont(StandardFonts.Helvetica);
-
-        // Embed the background page once and reuse
+    
+        // Embed the background page once and reuse it for all foreground pages
         const embeddedBackgroundPage = await resultPdfDoc.embedPage(backgroundPage);
-
+    
+        // Embed all foreground pages at once to improve performance. If you embed them one by one, it will embed the same resources multiple times, and the resulting PDF will be HUGE in size. See this comment for more details: https://github.com/Hopding/pdf-lib/issues/639#issuecomment-905759877
+        const embeddedForegroundPages = await resultPdfDoc.embedPages(foregroundPdfPages);
+    
         let i = 0;
-        for (const currSourcePage of foregroundPdfPages) {
+        for (const currentEmbeddedForegroundPage of embeddedForegroundPages) {
             if (i++ >= pagesLimit) break;
-
-            // Embed the current foreground page
-            const embeddedCurrSourcePage = await resultPdfDoc.embedPage(currSourcePage);
-
+    
             const currentResultPage = resultPdfDoc.addPage([backgroundPage.getWidth(), backgroundPage.getHeight()]);
-
+    
             currentResultPage.drawPage(embeddedBackgroundPage, {
                 x: 0,
                 y: 0,
                 width: currentResultPage.getWidth(),
                 height: currentResultPage.getHeight(),
             });
-
-            const centerX = (currentResultPage.getWidth() - currSourcePage.getWidth()) / 2;
-            const centerY = (currentResultPage.getHeight() - currSourcePage.getHeight()) / 2;
-
-            currentResultPage.drawPage(embeddedCurrSourcePage, {
+    
+            const centerX = (currentResultPage.getWidth() - currentEmbeddedForegroundPage.width) / 2;
+            const centerY = (currentResultPage.getHeight() - currentEmbeddedForegroundPage.height) / 2;
+    
+            currentResultPage.drawPage(currentEmbeddedForegroundPage, {
                 x: centerX,
                 y: centerY,
-                width: currSourcePage.getWidth(),
-                height: currSourcePage.getHeight(),
+                width: currentEmbeddedForegroundPage.width,
+                height: currentEmbeddedForegroundPage.height,
             });
-
+    
             // Add watermark
             const watermarkText = "Add margins to help you take notes using marginate";
             const textSize = 10;
             const textWidth = helveticaFont.widthOfTextAtSize(watermarkText, textSize);
             const x = currentResultPage.getWidth() - textWidth - 10;
             const y = 10;
-
+    
             currentResultPage.drawText(watermarkText, {
                 x: x,
                 y: y,
@@ -219,13 +219,8 @@
             });
         }
     
-        // compressing the PDF using coherentpdf
         const pdfBytes = await resultPdfDoc.save();
-        const cpdfObject = coherentpdf.fromMemory(pdfBytes, "");
-        coherentpdf.squeezeInMemory(cpdfObject);
-        const compressedPdfBytes = coherentpdf.toMemory(cpdfObject, false, false);
-    
-        return compressedPdfBytes;
+        return pdfBytes;
     }
 
 
