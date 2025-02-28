@@ -95,7 +95,7 @@ function App(): JSX.Element {
   ]);
 
 
-  
+
 
   // Trigger the final PDF merge and prompt the user to download
   const handleDownload = async () => {
@@ -145,16 +145,22 @@ function App(): JSX.Element {
   
   return (
     <main style={{ margin: '1rem' }}>
+
+
       {/*
         Title Section
-        Explanation: This is our main brand area. 
-        We keep it simple so it's responsive on iPads in both orientations.
+        Always visible, no matter the step
       */}
       <header>
         <h1>Marginate</h1>
-        <p><em>Add Space for Your Notes to Any PDF</em></p>
+        <p>Add Space for Your Notes to Any PDF</p>
       </header>
 
+
+
+      {/*
+        STEP 1: UPLOAD PDF OR ENTER URL
+      */}
       {step === 1 && (
         <section style={{ border: '1px solid #ddd', padding: '1rem', borderRadius: '0.5rem' }}>
           <h2>Upload Your PDF or Enter URL</h2>
@@ -185,6 +191,13 @@ function App(): JSX.Element {
         </section>
       )}
 
+
+
+
+
+      {/*
+        STEP 2: PERSONALIZATION AND PREVIEW
+      */}
       {step === 2 && (
         <>
           <section style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
@@ -197,11 +210,11 @@ function App(): JSX.Element {
               borderRadius: '0.5rem',
               padding: '1rem'
             }}>
-              <h2>Personalize Your Margins</h2>
+              <h2>Personalize</h2>
 
               {/* Choose size */}
               <label style={{ display: 'block', marginTop: '0.5rem' }}>
-                <strong>Choose Size:</strong>
+                <strong>Margin Size:</strong>
               </label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 {["A1", "A2", "A3"].map((size) => (
@@ -217,7 +230,7 @@ function App(): JSX.Element {
 
               {/* Choose margin color */}
               <label style={{ display: 'block', marginTop: '1rem' }}>
-                <strong>Choose Margin Color:</strong>
+                <strong>Margin Color:</strong>
               </label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 {["Yellow", "White", "Dark"].map((colorOpt) => (
@@ -233,7 +246,7 @@ function App(): JSX.Element {
 
               {/* Choose paper style */}
               <label style={{ display: 'block', marginTop: '1rem' }}>
-                <strong>Choose Paper Style:</strong>
+                <strong>Paper Style:</strong>
               </label>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 {["Lines", "Squares", "Plain", "Cornell (best for study)"].map((styleOpt) => (
