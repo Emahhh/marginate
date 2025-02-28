@@ -1,6 +1,4 @@
-// Explanation: This file contains utility functions for fetching PDF bytes and merging PDF documents.
-// People unfamiliar with React can consider these as "helper" or "library" functions 
-// that do not deal with UI, only with data (PDF operations).
+// This file contains utility functions for PDF operations, unrelated to UI or React.
 
 import { PDFDocument, PDFPage, StandardFonts, rgb } from 'pdf-lib';
 
@@ -34,11 +32,7 @@ async function fetchPdfBytesOrFile(
   }
 }
 
-/**
- * Our function that merges a background PDF with an optional foreground PDF.
- * For now, the foreground PDF is not actually used, but it's here in case
- * we expand the feature in the future.
- */
+
 export async function createMergedPdf(
   backgroundUrl: string,
   backgroundBytes: ArrayBuffer | null,
@@ -74,12 +68,14 @@ export async function createMergedPdf(
   const resultPdfDoc = await PDFDocument.create();
   const helveticaFont = await resultPdfDoc.embedFont(StandardFonts.Helvetica);
 
+  // Embed the background page once and reuse it for all foreground pages
   const embeddedBackground = await resultPdfDoc.embedPage(backgroundPage);
-  const embeddedForegrounds = await resultPdfDoc.embedPages(foregroundPages);
+  
+  // Embed all foreground pages at once to improve performance. If you embed them one by one, it will embed the same resources multiple times, and the resulting PDF will be HUGE in size. See this comment for more details: https://github.com/Hopding/pdf-lib/issues/639#issuecomment-905759877
+  const pagesToEmbed = foregroundPages.slice(0, pagesLimit); // not all, just the first pagesLimit
+  const embeddedForegrounds = await resultPdfDoc.embedPages(pagesToEmbed);
 
-  let i = 0;
   for (const embeddedForeground of embeddedForegrounds) {
-    if (i++ >= pagesLimit) break;
     const newPage = resultPdfDoc.addPage([backgroundPage.getWidth(), backgroundPage.getHeight()]);
 
     // Draw the chosen background
