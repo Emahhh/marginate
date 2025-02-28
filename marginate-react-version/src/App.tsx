@@ -94,10 +94,18 @@ async function createMergedPdf(
   return resultPdfDoc.save();
 }
 
+
+
+
+
+
+
+
 /**
  * Main React component and entry point of our PDF merging app
  */
 function App(): JSX.Element {
+  
   // For storing URLs of the background and foreground PDFs
   const [backgroundPdfUrl, setBackgroundPdfUrl] = useState<string>(
     "https://emahhh.github.io/marginate/examples/a1.pdf"
