@@ -158,7 +158,12 @@ function App(): JSX.Element {
         Always visible, no matter the step
       */}
       <header>
-        <h1>Marginate</h1>
+        <h1
+          onClick={() => window.location.reload()}
+          style={{ cursor: 'pointer' }}
+        >
+          Marginate
+        </h1>
         <p>Add Space for Your Notes to Any PDF</p>
       </header>
 
@@ -206,6 +211,18 @@ function App(): JSX.Element {
       */}
       {step === 2 && (
         <>
+
+            <a
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              window.location.reload();
+            }}
+            style={{ display: 'block', marginBottom: '1rem', textDecoration: 'none', cursor: 'pointer' }}
+            >
+            ← use another PDF
+            </a>
+
           <section style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
             {/*
               Left side: Personalization card
@@ -358,14 +375,20 @@ function App(): JSX.Element {
                 <p>No preview available.</p>
               )}
 
-              <div style={{ marginTop: '1rem' }}>
-                <button onClick={handleDownload} style={{ fontSize: '1.2rem' }}>
-                  Download PDF
+
+                <button onClick={handleDownload} style={{ marginTop: '1rem', fontSize: '1.2rem', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ marginRight: '0.5rem' }}>Download PDF</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-download">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
                 </button>
-                <button onClick={handleOpenInNewTab} style={{ marginLeft: '1rem' }}>
-                  or Open in New Tab
-                </button>
-              </div>
+
+                <a onClick={handleOpenInNewTab} style={{ marginTop: '0.5rem', display: 'block', textAlign: 'center' }}>
+                or Open in New Tab
+                </a>
+
             </article>
 
 
