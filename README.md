@@ -4,8 +4,8 @@ What is Marginate?
 Marginate is a web app that allows you to add margins to your PDFs. This is useful when you want to take notes on a PDF, for example during a lecture or a meeting over some powerpoint slides. The margins give you space to write down your thoughts, questions, or ideas. You can customize the size and color of the margins to suit your preferences. Marginate is easy to use and works in the browser, but is particularly designed for iPads.
 
 How to try it:
-- run 'serve .' and go to: http://localhost:3000/marginate or whatever port
-- or go to https://emahhh.github.io/marginate/marginate.html
+- run 'npm run dev' to start the development server
+- or go to https://emahhh.github.io/marginate/ (auto-deployed from the "docs" folder in the main branch, which is the build folder)
 
 # Appunti per lo sviluppo
 - Documentazione di pdf-lib https://pdf-lib.js.org
