@@ -245,18 +245,24 @@ function App(): JSX.Element {
                   className={paperSize === "a1" ? "secondary" : ""}
                 >
                   A1
+                  <br />
+                  <small>Huge</small>
                 </button>
                 <button
                   onClick={() => setPaperSize("a2")}
                   className={paperSize === "a2" ? "secondary" : ""}
                 >
                   A2
+                  <br />
+                  <small>Big</small>
                 </button>
                 <button
                   onClick={() => setPaperSize("a3")}
                   className={paperSize === "a3" ? "secondary" : ""}
                 >
                   A3
+                  <br />
+                  <small>Medium</small>
                 </button>
                 </div>
 
@@ -279,14 +285,14 @@ function App(): JSX.Element {
                   className={marginColor === "white" ? "secondary" : ""}
                   disabled={true}
                 >
-                  White <small>(coming soon)</small>
+                  White <br /><small>(coming soon)</small>
                 </button>
                 <button
                   onClick={() => setMarginColor("dark")}
                   className={marginColor === "dark" ? "secondary" : ""}
                   disabled={true}
                 >
-                  Dark <small>(coming soon)</small>
+                  Dark <br /><small>(coming soon)</small>
                 </button>
               </div>
               
@@ -300,7 +306,7 @@ function App(): JSX.Element {
                   className={paperStyle === "lines" ? "secondary" : ""}
                   disabled={true}
                 >
-                  Lines <small>(coming soon)</small>
+                  Lines <br /><small>(coming soon)</small>
                 </button>
                 <button
                   onClick={() => setPaperStyle("squares")}
@@ -313,14 +319,14 @@ function App(): JSX.Element {
                   className={paperStyle === "plain" ? "secondary" : ""}
                   disabled={true}
                 >
-                  Plain <small>(coming soon)</small>
+                  Plain <br /><small>(coming soon)</small>
                 </button>
                 <button
                   onClick={() => setPaperStyle("cornell")}
                   className={paperStyle === "cornell" ? "secondary" : ""}
                   disabled={true}
                 >
-                  Cornell (best for study) <small>(coming soon)</small>
+                  Cornell (best for study) <br /><small>(coming soon)</small>
                 </button>
               </div>
 
