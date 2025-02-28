@@ -85,16 +85,15 @@ function App(): JSX.Element {
           const blob = new Blob([pdfBytes], { type: 'application/pdf' });
           const url = URL.createObjectURL(blob);
           setPreviewUrl(url);
-        } catch (err: any) {
+        } catch (err) {
           console.error(err);
-          setErrorMessage(`Error while generating preview: ${err.message}`);
+          setErrorMessage(`Error while generating preview: ${err}`);
         }
       })();
     }
   }, [
     step,
     chosenBackgroundUrl,
-    null,
     foregroundPdfUrl,
     foregroundFileBytes,
     includeWatermark

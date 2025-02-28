@@ -38,8 +38,8 @@ export async function createMergedPdf(
   backgroundBytes: ArrayBuffer | null,
   foregroundUrl: string,
   foregroundBytes: ArrayBuffer | null,
-  pagesLimit: number = Infinity,
-  includeWatermark: boolean = false
+  pagesLimit = Infinity,
+  includeWatermark = false
 ): Promise<Uint8Array> {
 
   let backgroundPdfBytes: ArrayBuffer;
