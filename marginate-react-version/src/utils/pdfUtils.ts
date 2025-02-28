@@ -2,13 +2,13 @@
 // People unfamiliar with React can consider these as "helper" or "library" functions 
 // that do not deal with UI, only with data (PDF operations).
 
-import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, PDFPage, StandardFonts, rgb } from 'pdf-lib';
 
 /**
  * Fetches PDF content either from a URL or local file bytes.
  * At least one of the two parameters must contain a PDF.
  */
-export async function fetchPdfBytesOrFile(
+async function fetchPdfBytesOrFile(
   url: string,
   fileBytes: ArrayBuffer | null
 ): Promise<ArrayBuffer> {
@@ -47,13 +47,29 @@ export async function createMergedPdf(
   pagesLimit: number = Infinity,
   includeWatermark: boolean = false
 ): Promise<Uint8Array> {
-  const backgroundPdfBytes = await fetchPdfBytesOrFile(backgroundUrl, backgroundBytes);
-  const basePdfDoc = await PDFDocument.load(backgroundPdfBytes);
-  const backgroundPage = basePdfDoc.getPages()[0];
 
-  const foregroundPdfBytes = await fetchPdfBytesOrFile(foregroundUrl, foregroundBytes);
+  let backgroundPdfBytes: ArrayBuffer;
+  let foregroundPdfBytes: ArrayBuffer;
+
+  // getting the background PDF page
+  try {
+    backgroundPdfBytes = await fetchPdfBytesOrFile(backgroundUrl, backgroundBytes);
+  } catch (error) {
+    console.error('Error while fetching the BACKGROUND PDF:', error);
+    throw new Error('Error while fetching the BACKGROUND PDF:' + error);
+  }
+  const basePdfDoc = await PDFDocument.load(backgroundPdfBytes); 
+  const backgroundPage : PDFPage = basePdfDoc.getPages()[0];
+
+  // getting the foreground PDF pages
+  try {
+    foregroundPdfBytes = await fetchPdfBytesOrFile(foregroundUrl, foregroundBytes);
+  } catch (error) {
+    console.error('Error while fetching the FOREGROUND PDF:', error);
+    throw new Error('Error while fetching the FOREGROUND PDF:' + error);
+  }
   const foregroundPdfDoc = await PDFDocument.load(foregroundPdfBytes);
-  const foregroundPages = foregroundPdfDoc.getPages();
+  const foregroundPages : PDFPage[]= foregroundPdfDoc.getPages();
 
   const resultPdfDoc = await PDFDocument.create();
   const helveticaFont = await resultPdfDoc.embedFont(StandardFonts.Helvetica);
@@ -104,9 +120,8 @@ export async function createMergedPdf(
 
 /**
  * Picks which local PDF path or URL to use as the background,
- * based on user personalization.
- * Note: We rely on the developer to place matching PDF files
- * under "public/pdf-templates".
+ * based on user settings.
+ * Note: You must place the matching PDF files under "public/pdf-templates".
  */
 export function getBackgroundPdfUrl(paperSize: string, marginColor: string, paperStyle: string) {
   // Convert "Cornell (best for study)" to a simpler identifier. 

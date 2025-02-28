@@ -4,7 +4,6 @@ import {
   createMergedPdf,
   getBackgroundPdfUrl
 } from './utils/pdfUtils'; 
-// Comments: We now import helper functions from "pdfUtils.ts"
 
 
 
@@ -15,15 +14,12 @@ function App(): JSX.Element {
   // Step management for a simple wizard navigation
   const [step, setStep] = useState(1);
 
-  // Background PDF sources
-  const [backgroundFileBytes, setBackgroundFileBytes] = useState<ArrayBuffer | null>(null);
-
-  // This will eventually store a local PDF URL or a user-supplied URL
+  // Background PDF
   const [backgroundPdfUrl, setBackgroundPdfUrl] = useState<string>("");
 
   // Foreground PDF
-  const [foregroundPdfUrl] = useState<string>("");
-  const [foregroundFileBytes] = useState<ArrayBuffer | null>(null);
+  const [foregroundPdfUrl, setForegroundPdfUrl] = useState<string>("");
+  const [foregroundFileBytes, setForegroundFileBytes] = useState<ArrayBuffer | null>(null);
 
   // PDF preview and error
   const [previewUrl, setPreviewUrl] = useState<string>("");
@@ -32,37 +28,35 @@ function App(): JSX.Element {
   // Personalization controls
   const [paperSize, setPaperSize] = useState<string>("A2");
   const [marginColor, setMarginColor] = useState<string>("Yellow");
-  const [paperStyle, setPaperStyle] = useState<string>("Lines");
-  const [includeWatermark, setIncludeWatermark] = useState<boolean>(false);
+  const [paperStyle, setPaperStyle] = useState<string>("Squares");
+  const [includeWatermark, setIncludeWatermark] = useState<boolean>(true);
 
+
+
+  // HANDLE UPLOAD
   // This function is triggered when the user selects a PDF file
   // We store the file's bytes for advanced usage in step 2
   const handleBackgroundUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const fileBytes = await e.target.files[0].arrayBuffer();
-      setBackgroundFileBytes(fileBytes);
+      setForegroundFileBytes(fileBytes);
       // Clear any typed URL since user picked a file
-      setBackgroundPdfUrl("");
+      setForegroundPdfUrl("");
     } else {
-      setBackgroundFileBytes(null);
+      setForegroundFileBytes(null);
     }
   };
 
-  // Recompute the "chosen" background PDF URL. If user did not upload a file,
-  // use the local PDF path from "getBackgroundPdfUrl"
-  const chosenBackgroundUrl = React.useMemo(() => {
-    if (backgroundFileBytes) {
-      // If the user has uploaded a file, we won't override with a local template
-      // Return an empty string so "createMergedPdf" picks the file bytes
-      return "";
-    }
-    // If no user file, pick a PDF from local folder based on the user's choice
-    if (!backgroundPdfUrl.trim()) {
-      return getBackgroundPdfUrl(paperSize, marginColor, paperStyle);
-    }
-    // If user typed some URL, let's use that
-    return backgroundPdfUrl;
-  }, [paperSize, marginColor, paperStyle, backgroundPdfUrl, backgroundFileBytes]);
+
+
+  // CALCULATE NEW BACKGROUND URL
+  // when the dependencies change, we need to return the new background URL
+  const chosenBackgroundUrl = React.useMemo( function(){
+    const newBackgroundUrl = getBackgroundPdfUrl(paperSize, marginColor, paperStyle);
+    return newBackgroundUrl;
+  }, [paperSize, marginColor, paperStyle]);
+
+
 
 
 
@@ -76,7 +70,7 @@ function App(): JSX.Element {
           // We use "chosenBackgroundUrl" for the background
           const pdfBytes = await createMergedPdf(
             chosenBackgroundUrl,
-            backgroundFileBytes,
+            null,
             foregroundPdfUrl,
             foregroundFileBytes,
             1,
@@ -94,18 +88,21 @@ function App(): JSX.Element {
   }, [
     step,
     chosenBackgroundUrl,
-    backgroundFileBytes,
+    null,
     foregroundPdfUrl,
     foregroundFileBytes,
     includeWatermark
   ]);
+
+
+  
 
   // Trigger the final PDF merge and prompt the user to download
   const handleDownload = async () => {
     try {
       const pdfBytes = await createMergedPdf(
         chosenBackgroundUrl,
-        backgroundFileBytes,
+        null,
         foregroundPdfUrl,
         foregroundFileBytes,
         Infinity,
@@ -127,7 +124,7 @@ function App(): JSX.Element {
     try {
       const pdfBytes = await createMergedPdf(
         chosenBackgroundUrl,
-        backgroundFileBytes,
+        null,
         foregroundPdfUrl,
         foregroundFileBytes,
         Infinity,
