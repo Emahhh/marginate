@@ -114,17 +114,21 @@ export async function createMergedPdf(
   return resultPdfDoc.save();
 }
 
-/**
- * Picks which local PDF path or URL to use as the background,
- * based on user settings.
- * Note: You must place the matching PDF files under "public/pdf-templates".
- */
-export function getBackgroundPdfUrl(paperSize: string, marginColor: string, paperStyle: string) {
-  // Convert "Cornell (best for study)" to a simpler identifier. 
-  const styleKey = paperStyle.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  const sizeKey = paperSize.toLowerCase();
-  const colorKey = marginColor.toLowerCase();
 
-  // We'll assume we have files named like "a4-yellow-lines.pdf", "a4-dark-squares.pdf", etc.
-  return `/pdf-templates/${sizeKey}-${colorKey}-${styleKey}.pdf`;
+
+
+
+/**
+ * Given some settings, like paperSize="A2", marginColor="yellow", paperStyle="squares", 
+ * this function returns the URL of the corresponding background PDF, like: "/pdf-backgrounds/a2-yellow-squares.pdf".
+ * Note: You must place the matching PDF files under "/public/pdf-backgrounds".
+ */
+export function getBackgroundPdfUrl(paperSize: string, marginColor: string, paperStyle: string): string {
+
+  const url = `/pdf-backgrounds/${paperSize}-${marginColor}-${paperStyle}.pdf`;
+  console.debug(`getBackgroundPdfUrl: ${url}`);
+  return url;
 }
+
+
+

@@ -26,9 +26,9 @@ function App(): JSX.Element {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   // Personalization controls
-  const [paperSize, setPaperSize] = useState<string>("A2");
-  const [marginColor, setMarginColor] = useState<string>("Yellow");
-  const [paperStyle, setPaperStyle] = useState<string>("Squares");
+  const [paperSize, setPaperSize] = useState<string>("a2");
+  const [marginColor, setMarginColor] = useState<string>("yellow");
+  const [paperStyle, setPaperStyle] = useState<string>("squares");
   const [includeWatermark, setIncludeWatermark] = useState<boolean>(true);
 
 
@@ -52,8 +52,14 @@ function App(): JSX.Element {
   // CALCULATE NEW BACKGROUND URL
   // when the dependencies change, we need to return the new background URL
   const chosenBackgroundUrl = React.useMemo( function(){
-    const newBackgroundUrl = getBackgroundPdfUrl(paperSize, marginColor, paperStyle);
-    return newBackgroundUrl;
+    try {
+      const newBackgroundUrl = getBackgroundPdfUrl(paperSize, marginColor, paperStyle);
+      return newBackgroundUrl;
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(`Error while generating preview: ${err}`);
+      return "";
+    }
   }, [paperSize, marginColor, paperStyle]);
 
 
@@ -216,62 +222,106 @@ function App(): JSX.Element {
               <label style={{ display: 'block', marginTop: '0.5rem' }}>
                 <strong>Margin Size:</strong>
               </label>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {["A1", "A2", "A3"].map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setPaperSize(size)}
-                    className={paperSize === size ? "secondary" : ""}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  onClick={() => setPaperSize("a1")}
+                  className={paperSize === "a1" ? "secondary" : ""}
+                >
+                  A1
+                </button>
+                <button
+                  onClick={() => setPaperSize("a2")}
+                  className={paperSize === "a2" ? "secondary" : ""}
+                >
+                  A2
+                </button>
+                <button
+                  onClick={() => setPaperSize("a3")}
+                  className={paperSize === "a3" ? "secondary" : ""}
+                >
+                  A3
+                </button>
+                </div>
+
+
+
 
               {/* Choose margin color */}
               <label style={{ display: 'block', marginTop: '1rem' }}>
                 <strong>Margin Color:</strong>
               </label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {["Yellow", "White", "Dark"].map((colorOpt) => (
-                  <button
-                    key={colorOpt}
-                    onClick={() => setMarginColor(colorOpt)}
-                    className={marginColor === colorOpt ? "secondary" : ""}
-                  >
-                    {colorOpt}
-                  </button>
-                ))}
+                <button
+                  onClick={() => setMarginColor("yellow")}
+                  className={marginColor === "yellow" ? "secondary" : ""}
+                >
+                  Yellow
+                </button>
+                <button
+                  onClick={() => setMarginColor("white")}
+                  className={marginColor === "white" ? "secondary" : ""}
+                  disabled={true}
+                >
+                  White <small>(coming soon)</small>
+                </button>
+                <button
+                  onClick={() => setMarginColor("dark")}
+                  className={marginColor === "dark" ? "secondary" : ""}
+                  disabled={true}
+                >
+                  Dark <small>(coming soon)</small>
+                </button>
               </div>
-
+              
               {/* Choose paper style */}
               <label style={{ display: 'block', marginTop: '1rem' }}>
                 <strong>Paper Style:</strong>
               </label>
               <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                {["Lines", "Squares", "Plain", "Cornell (best for study)"].map((styleOpt) => (
-                  <button
-                    key={styleOpt}
-                    onClick={() => setPaperStyle(styleOpt)}
-                    className={paperStyle === styleOpt ? "secondary" : ""}
-                  >
-                    {styleOpt}
-                  </button>
-                ))}
+                <button
+                  onClick={() => setPaperStyle("lines")}
+                  className={paperStyle === "lines" ? "secondary" : ""}
+                  disabled={true}
+                >
+                  Lines <small>(coming soon)</small>
+                </button>
+                <button
+                  onClick={() => setPaperStyle("squares")}
+                  className={paperStyle === "squares" ? "secondary" : ""}
+                >
+                  Squares
+                </button>
+                <button
+                  onClick={() => setPaperStyle("plain")}
+                  className={paperStyle === "plain" ? "secondary" : ""}
+                  disabled={true}
+                >
+                  Plain <small>(coming soon)</small>
+                </button>
+                <button
+                  onClick={() => setPaperStyle("cornell")}
+                  className={paperStyle === "cornell" ? "secondary" : ""}
+                  disabled={true}
+                >
+                  Cornell (best for study) <small>(coming soon)</small>
+                </button>
               </div>
 
+
+
+
               {/* Watermark toggle */}
-              <label style={{ display: 'block', marginTop: '1rem' }}>
-                <strong>Add Watermark:</strong>
-              </label>
-              <label className="toggle">
-                <input
-                  type="checkbox"
-                  checked={includeWatermark}
-                  onChange={() => setIncludeWatermark(!includeWatermark)}
-                />
-                <span className="toggle-switch"></span>
-              </label>
+                <label style={{ marginTop: '1rem' }}>
+                  <input
+                    type="checkbox"
+                    role="switch"
+                    checked={includeWatermark}
+                    onChange={() => setIncludeWatermark(!includeWatermark)}
+                  />
+                  Add Watermark
+                </label>
+
+
             </article>
 
 
