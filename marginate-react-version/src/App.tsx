@@ -274,8 +274,11 @@ function App(): JSX.Element {
               </label>
             </article>
 
+
+
+
             {/*
-              Right side: Preview card
+              PREVIEW CARD ON THE RIGHT
             */}
             <article style={{
               flex: '2 1 300px',
@@ -283,18 +286,23 @@ function App(): JSX.Element {
               borderRadius: '0.5rem',
               padding: '1rem'
             }}>
+
               <h2>Preview</h2>
               {errorMessage && (
                 <p style={{ color: 'red' }}>{errorMessage}</p>
               )}
 
+              {/* On iOS safari, embed with no height is better. But on desktop, we should put the height. */}
               {previewUrl ? (
-                <iframe
+                <embed
                   title="PDF Preview"
                   src={previewUrl}
                   width="100%"
-                  height="400px"
-                  style={{ border: '1px solid #ccc' }}
+                  //height="100%"
+                  type="application/pdf"
+                  style={{ 
+                    border: '1px solid #ccc', 
+                  }}
                 />
               ) : (
                 <p>No preview available.</p>
@@ -309,6 +317,10 @@ function App(): JSX.Element {
                 </button>
               </div>
             </article>
+
+
+
+
           </section>
         </>
       )}
