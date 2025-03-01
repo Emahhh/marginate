@@ -16,14 +16,6 @@ const RadioCardsRoot = React.forwardRef<
     className?: string
   }
 >(({ className, columns = { initial: "1" }, ...props }, ref) => {
-  const gridCols = cn(
-    columns.initial && `grid-cols-${columns.initial}`,
-    columns.sm && `sm:grid-cols-${columns.sm}`,
-    columns.md && `md:grid-cols-${columns.md}`,
-    columns.lg && `lg:grid-cols-${columns.lg}`,
-    columns.xl && `xl:grid-cols-${columns.xl}`,
-    columns["2xl"] && `2xl:grid-cols-${columns["2xl"]}`,
-  )
 
   return <RadioGroupPrimitive.Root className={cn("flex flex-wrap gap-2", className)} {...props} ref={ref} />
 })

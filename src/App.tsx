@@ -1,8 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Alert } from './components/ui/alert';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { RadioCards } from "@/components/ui/radio-cards";
 import { Text } from "@/components/ui/text";
