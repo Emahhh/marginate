@@ -135,12 +135,18 @@ function App(): JSX.Element {
         STEP 1: UPLOAD PDF OR ENTER URL
       */}
       {step === 1 && (
-        <Card className="p-6">
-          <h2 className="text-xl font-bold mb-4">Upload Your PDF or Enter URL</h2>
-          <div className="mb-4">
-            <Label>Choose File:</Label>
-            <Input type="file" accept="application/pdf" onChange={handleBackgroundUpload} />
-          </div>
+        <Card className="p-6 max-w-md mx-auto">
+          <h2 className="text-xl font-bold mb-4">Choose a PDF</h2>
+          <p className="text-sm text-gray-500 mb-4">Select a PDF file to add margins to.</p>
+
+          <Input
+            id="pdf-upload"
+            type="file"
+            accept="application/pdf"
+            onChange={handleBackgroundUpload}
+            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            style={{ color: 'transparent' }}
+          />
         </Card>
       )}
 
