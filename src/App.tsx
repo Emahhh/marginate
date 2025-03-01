@@ -12,8 +12,6 @@ import { createMergedPdf, getBackgroundPdfUrl } from './utils/pdfUtils';
 
 function App(): JSX.Element {
   const [step, setStep] = useState(1);
-  const [backgroundPdfUrl, setBackgroundPdfUrl] = useState<string>("");
-  const [foregroundPdfUrl, setForegroundPdfUrl] = useState<string>("");
   const [foregroundFileBytes, setForegroundFileBytes] = useState<ArrayBuffer | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -26,7 +24,7 @@ function App(): JSX.Element {
     if (e.target.files && e.target.files[0]) {
       const fileBytes = await e.target.files[0].arrayBuffer();
       setForegroundFileBytes(fileBytes);
-      setForegroundPdfUrl("");
+      setStep(2); // Automatically proceed to the next step
     } else {
       setForegroundFileBytes(null);
     }
@@ -51,7 +49,7 @@ function App(): JSX.Element {
           const pdfBytes = await createMergedPdf(
             chosenBackgroundUrl,
             null,
-            foregroundPdfUrl,
+            "",
             foregroundFileBytes,
             1,
             includeWatermark
@@ -65,14 +63,14 @@ function App(): JSX.Element {
         }
       })();
     }
-  }, [step, chosenBackgroundUrl, foregroundPdfUrl, foregroundFileBytes, includeWatermark]);
+  }, [step, chosenBackgroundUrl, "", foregroundFileBytes, includeWatermark]);
 
   const handleDownload = async () => {
     try {
       const pdfBytes = await createMergedPdf(
         chosenBackgroundUrl,
         null,
-        foregroundPdfUrl,
+        "",
         foregroundFileBytes,
         Infinity,
         includeWatermark
@@ -93,7 +91,7 @@ function App(): JSX.Element {
       const pdfBytes = await createMergedPdf(
         chosenBackgroundUrl,
         null,
-        foregroundPdfUrl,
+        "",
         foregroundFileBytes,
         Infinity,
         includeWatermark
@@ -122,16 +120,6 @@ function App(): JSX.Element {
             <Label>Choose File:</Label>
             <Input type="file" accept="application/pdf" onChange={handleBackgroundUpload} />
           </div>
-          <div className="mb-4">
-            <Label>Enter PDF URL:</Label>
-            <Input
-              type="text"
-              value={backgroundPdfUrl}
-              onChange={(e) => setBackgroundPdfUrl(e.target.value)}
-              placeholder="https://example.com/yourpdf.pdf"
-            />
-          </div>
-          <Button onClick={() => setStep(2)} className="w-full">Next</Button>
         </Card>
       )}
 
