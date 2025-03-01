@@ -137,10 +137,22 @@ function App(): JSX.Element {
         STEP 1: UPLOAD PDF OR ENTER URL
       */}
       {step === 1 && (
-        <Card className="p-6 max-w-md mx-auto">
+        <Card 
+          className="p-6 max-w-md mx-auto"
+          onDrop={async (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === "application/pdf") {
+              const fileBytes = await file.arrayBuffer();
+              setForegroundFileBytes(fileBytes);
+              setStep(2);
+            }
+          }}
+          onDragOver={(e) => e.preventDefault()}
+        >
           <h2 className="text-xl font-bold mb-4">Choose a PDF</h2>
           <p className="text-sm text-gray-500 mb-4">Select a PDF file to add margins to.</p>
-      
+            
           <label htmlFor="pdf-upload" className="bg-primary text-primary-foreground shadow-xs hover:bg-primary/90                    inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive                 h-10 rounded-md px-6 has-[>svg]:px-4">
             <LineMdFilePlus className="mr-2 size-5" />
             Choose File
@@ -152,6 +164,7 @@ function App(): JSX.Element {
             onChange={handleBackgroundUpload}
             className="hidden"
           />
+          <p className="text-sm text-gray-500 text-center">Or drag and drop a PDF file here.</p>
         </Card>
       )}
       
