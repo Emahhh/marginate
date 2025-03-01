@@ -150,21 +150,25 @@ function App(): JSX.Element {
           }}
           onDragOver={(e) => e.preventDefault()}
         >
-          <h2 className="text-2xl font-bold mb-6 text-center">Choose a PDF</h2>
-          <p className="text-sm text-gray-600 mb-6 text-center">Select a PDF file to add margins to.</p>
+          <div>
+            <h2 className="text-2xl font-bold text-center">Choose a PDF</h2>
+            <p className="text-sm text-gray-600 mb-6 text-center">Select a PDF file to add margins to.</p>
+          </div>
         
-          <label htmlFor="pdf-upload" className="bg-primary text-white shadow-md hover:bg-primary/90 inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-all h-12 px-6 mb-4 w-full cursor-pointer">
-        <LineMdFilePlus className="mr-2 size-5" />
-        Choose File
-          </label>
-          <Input
-        id="pdf-upload"
-        type="file"
-        accept="application/pdf"
-        onChange={handleBackgroundUpload}
-        className="hidden"
-          />
-          <p className="text-sm text-gray-600 text-center">Or drag and drop a PDF file here.</p>
+          <div className='mx-auto'>
+            <label htmlFor="pdf-upload" className="bg-primary text-white shadow-md hover:bg-primary/90 inline-flex items-center justify-center rounded-md text-sm font-medium transition-all h-12 px-6 mb-2 w-full cursor-pointer max-w-xs mx-auto">
+              <LineMdFilePlus className="mr-2 size-5" />
+              Choose File
+            </label>
+            <Input
+            id="pdf-upload"
+            type="file"
+            accept="application/pdf"
+            onChange={handleBackgroundUpload}
+            className="hidden"
+            />
+            <p className="text-sm text-gray-600 text-center">Or drag and drop the file here.</p>
+          </div>
         </Card>
       )}
       
