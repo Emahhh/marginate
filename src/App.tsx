@@ -1,12 +1,15 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
+
+
 import { Alert } from './components/ui/alert';
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { RadioCards } from "@/components/ui/radio-cards"
 import { Text } from "@/components/ui/text"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 import {
   createMergedPdf,
@@ -174,19 +177,19 @@ function App(): JSX.Element {
 
               <Label>Margin Size:</Label>
               <RadioCards.Root value={paperSize} onValueChange={setPaperSize} columns={{ initial: "1", sm: "3" }}>
-                <RadioCards.Item value="a1" image={{ src: "/placeholder.svg?height=48&width=48", alt: "A1" }}>
+                <RadioCards.Item value="a1" >
                   <div className="flex flex-col w-full">
                     <Text weight="bold">A1</Text>
                     <Text variant="muted">Huge</Text>
                   </div>
                 </RadioCards.Item>
-                <RadioCards.Item value="a2" image={{ src: "/placeholder.svg?height=48&width=48", alt: "A2" }}>
+                <RadioCards.Item value="a2">
                   <div className="flex flex-col w-full">
                     <Text weight="bold">A2</Text>
                     <Text variant="muted">Big</Text>
                   </div>
                 </RadioCards.Item>
-                <RadioCards.Item value="a3" image={{ src: "/placeholder.svg?height=48&width=48", alt: "A3" }}>
+                <RadioCards.Item value="a3">
                   <div className="flex flex-col w-full">
                     <Text weight="bold">A3</Text>
                     <Text variant="muted">Medium</Text>
@@ -243,12 +246,15 @@ function App(): JSX.Element {
                 </RadioCards.Item>
               </RadioCards.Root>
 
-              <Checkbox
-                checked={includeWatermark}
-                onChange={() => setIncludeWatermark(!includeWatermark)}
-              >
-                Add Watermark
-              </Checkbox>
+                <div className="flex items-center space-x-2">
+                <Switch
+                  id="include-watermark"
+                  checked={includeWatermark}
+                  onCheckedChange={setIncludeWatermark}
+                />
+                <Label htmlFor="include-watermark">Add Watermark</Label>
+                </div>
+
             </Card>
 
             <Card className="flex-2 flex-1-300px">
@@ -282,17 +288,18 @@ function App(): JSX.Element {
                 </svg>
               </Button>
 
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleOpenInNewTab();
-                  }}
-                  className="mt-2 block text-center text-blue-500 hover:underline"
-                  >
-                  or Open in New Tab
-                </a>
-            </Card>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleOpenInNewTab();
+                }}
+                className="mt-2 block text-center text-blue-500 hover:underline cursor-pointer"
+                >
+                or Open in New Tab
+              </button>
+          </Card>
+
+
           </div>
         </>
       )}
