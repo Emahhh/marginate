@@ -19,7 +19,7 @@ function App(): JSX.Element {
   const [marginColor, setMarginColor] = useState<string>("yellow");
   const [paperStyle, setPaperStyle] = useState<string>("squares");
   const [includeWatermark, setIncludeWatermark] = useState<boolean>(true);
-
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   // HANDLE UPLOAD
   // This function is triggered when the user selects a PDF file
@@ -138,17 +138,24 @@ function App(): JSX.Element {
       */}
       {step === 1 && (
         <Card 
-          className="p-8 max-w-lg mx-auto border border-gray-200 shadow-lg rounded-lg"
+          className={`p-8 max-w-lg mx-auto mt-40 border border-gray-200 shadow-lg rounded-lg ${isDragging ? 'border-blue-500 bg-blue-50' : ''}`}
           onDrop={async (e) => {
-        e.preventDefault();
-        const file = e.dataTransfer.files[0];
-        if (file && file.type === "application/pdf") {
-          const fileBytes = await file.arrayBuffer();
-          setForegroundFileBytes(fileBytes);
-          setStep(2);
-        }
+            e.preventDefault();
+            setIsDragging(false);
+            const file = e.dataTransfer.files[0];
+            if (file && file.type === "application/pdf") {
+              const fileBytes = await file.arrayBuffer();
+              setForegroundFileBytes(fileBytes);
+              setStep(2);
+            } else if (file && file.type !== "application/pdf") {
+              console.error("Invalid file type. Please upload a PDF file.");
+            }
           }}
-          onDragOver={(e) => e.preventDefault()}
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
         >
           <div>
             <h2 className="text-2xl font-bold text-center">Choose a PDF</h2>
@@ -161,11 +168,11 @@ function App(): JSX.Element {
               Choose File
             </label>
             <Input
-            id="pdf-upload"
-            type="file"
-            accept="application/pdf"
-            onChange={handleBackgroundUpload}
-            className="hidden"
+              id="pdf-upload"
+              type="file"
+              accept="application/pdf"
+              onChange={handleBackgroundUpload}
+              className="hidden"
             />
             <p className="text-sm text-gray-600 text-center">Or drag and drop the file here.</p>
           </div>
