@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { RadioCards } from "@/components/ui/radio-cards"
+import { Text } from "@/components/ui/text"
 
 import {
   createMergedPdf,
@@ -134,17 +136,17 @@ function App(): JSX.Element {
   };
 
   return (
-    <Container>
+    <div>
       <header>
-        <Title onClick={() => window.location.reload()} style={{ cursor: 'pointer' }}>
+        <h1 onClick={() => window.location.reload()} className="text-3xl font-bold cursor-pointer">
           Marginate
-        </Title>
-        <Text>Add Space for Your Notes to Any PDF</Text>
+        </h1>
+        <p className="text-lg">Add Space for Your Notes to Any PDF</p>
       </header>
 
       {step === 1 && (
         <Card>
-          <Title>Upload Your PDF or Enter URL</Title>
+          <h2 className="text-xl font-bold mb-4">Upload Your PDF or Enter URL</h2>
           <Label>Choose File:</Label>
           <Input type="file" accept="application/pdf" onChange={handleBackgroundUpload} />
 
@@ -162,35 +164,84 @@ function App(): JSX.Element {
 
       {step === 2 && (
         <>
-          <Link href="#" onClick={(e) => { e.preventDefault(); window.location.reload(); }}>
+          <a href="#" onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="text-sm text-gray-500">
             ← use another PDF
-          </Link>
+          </a>
 
-          <Flex gap="1rem" wrap="wrap">
-            <Card flex="1 1 300px">
-              <Title>Personalize</Title>
+          <div className="flex gap-4 flex-wrap">
+            <Card className="flex-2 flex-1-300px">
+              <h1>Personalize</h1>
 
               <Label>Margin Size:</Label>
-              <RadioGroup value={paperSize} onChange={setPaperSize}>
-                <Radio value="a1">A1 <small>Huge</small></Radio>
-                <Radio value="a2">A2 <small>Big</small></Radio>
-                <Radio value="a3">A3 <small>Medium</small></Radio>
-              </RadioGroup>
+              <RadioCards.Root value={paperSize} onValueChange={setPaperSize} columns={{ initial: "1", sm: "3" }}>
+                <RadioCards.Item value="a1" image={{ src: "/placeholder.svg?height=48&width=48", alt: "A1" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">A1</Text>
+                    <Text variant="muted">Huge</Text>
+                  </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="a2" image={{ src: "/placeholder.svg?height=48&width=48", alt: "A2" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">A2</Text>
+                    <Text variant="muted">Big</Text>
+                  </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="a3" image={{ src: "/placeholder.svg?height=48&width=48", alt: "A3" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">A3</Text>
+                    <Text variant="muted">Medium</Text>
+                  </div>
+                </RadioCards.Item>
+              </RadioCards.Root>
 
               <Label>Margin Color:</Label>
-              <RadioGroup value={marginColor} onChange={setMarginColor}>
-                <Radio value="yellow">Yellow</Radio>
-                <Radio value="white" disabled>White <small>(coming soon)</small></Radio>
-                <Radio value="dark" disabled>Dark <small>(coming soon)</small></Radio>
-              </RadioGroup>
+              <RadioCards.Root value={marginColor} onValueChange={setMarginColor} columns={{ initial: "1", sm: "3" }}>
+                <RadioCards.Item value="yellow" image={{ src: "/placeholder.svg?height=48&width=48", alt: "Yellow" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">Yellow</Text>
+                  </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="white" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "White" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">White</Text>
+                    <Text variant="muted">(coming soon)</Text>
+                  </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="dark" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Dark" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">Dark</Text>
+                    <Text variant="muted">(coming soon)</Text>
+                  </div>
+                </RadioCards.Item>
+              </RadioCards.Root>
 
               <Label>Paper Style:</Label>
-              <RadioGroup value={paperStyle} onChange={setPaperStyle}>
-                <Radio value="lines" disabled>Lines <small>(coming soon)</small></Radio>
-                <Radio value="squares">Squares</Radio>
-                <Radio value="plain" disabled>Plain <small>(coming soon)</small></Radio>
-                <Radio value="cornell" disabled>Cornell (best for study) <small>(coming soon)</small></Radio>
-              </RadioGroup>
+              <RadioCards.Root value={paperStyle} onValueChange={setPaperStyle} columns={{ initial: "1", sm: "3" }}>
+                <RadioCards.Item value="lines" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Lines" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">Lines</Text>
+                    <Text variant="muted">(coming soon)</Text>
+                  </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="squares" image={{ src: "/placeholder.svg?height=48&width=48", alt: "Squares" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">Squares</Text>
+                  </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="plain" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Plain" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">Plain</Text>
+                    <Text variant="muted">(coming soon)</Text>
+                  </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="cornell" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Cornell" }}>
+                  <div className="flex flex-col w-full">
+                    <Text weight="bold">Cornell</Text>
+                    <Text variant="muted">(best for study)</Text>
+                    <Text variant="muted">(coming soon)</Text>
+                  </div>
+                </RadioCards.Item>
+              </RadioCards.Root>
 
               <Checkbox
                 checked={includeWatermark}
@@ -200,14 +251,26 @@ function App(): JSX.Element {
               </Checkbox>
             </Card>
 
-            <Card flex="2 1 300px">
-              <Title>Preview</Title>
-              {errorMessage && <Alert type="error">{errorMessage}</Alert>}
+            <Card className="flex-2 flex-1-300px">
+              <h2 className="text-xl font-bold mb-4">Preview</h2>
+              {errorMessage && (
+                <p style={{ color: 'red' }}>{errorMessage}</p>
+              )}
 
+              {/* On iOS safari, embed with no height is better. But on desktop, we should put the height. */}
               {previewUrl ? (
-                <Embed title="PDF Preview" src={previewUrl} width="100%" type="application/pdf" />
+                <embed
+                  title="PDF Preview"
+                  src={previewUrl}
+                  width="100%"
+                  //height="100%"
+                  type="application/pdf"
+                  style={{ 
+                    border: '1px solid #ccc', 
+                  }}
+                />
               ) : (
-                <Text>No preview available.</Text>
+                <p>No preview available.</p>
               )}
 
               <Button onClick={handleDownload} style={{ marginTop: '1rem', fontSize: '1.2rem', width: '100%' }}>
@@ -219,14 +282,21 @@ function App(): JSX.Element {
                 </svg>
               </Button>
 
-              <Link onClick={handleOpenInNewTab} style={{ marginTop: '0.5rem', display: 'block', textAlign: 'center' }}>
-                or Open in New Tab
-              </Link>
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleOpenInNewTab();
+                  }}
+                  className="mt-2 block text-center text-blue-500 hover:underline"
+                  >
+                  or Open in New Tab
+                </a>
             </Card>
-          </Flex>
+          </div>
         </>
       )}
-    </Container>
+    </div>
   );
 }
 
