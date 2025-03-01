@@ -150,20 +150,20 @@ function App(): JSX.Element {
                 <RadioCards.Root value={paperSize} onValueChange={setPaperSize} columns={{ initial: "1", sm: "3" }}>
                   <RadioCards.Item value="a1">
                     <div className="flex flex-col w-full">
-                      <Text weight="bold">A1</Text>
-                      <Text variant="muted">Huge</Text>
+                      <Text weight="bold">Very big</Text>
+                      <Text variant="muted">A1 paper</Text>
                     </div>
                   </RadioCards.Item>
                   <RadioCards.Item value="a2">
                     <div className="flex flex-col w-full">
-                      <Text weight="bold">A2</Text>
-                      <Text variant="muted">Big</Text>
+                      <Text weight="bold">Big</Text>
+                      <Text variant="muted">A2 paper</Text>
                     </div>
                   </RadioCards.Item>
                   <RadioCards.Item value="a3">
                     <div className="flex flex-col w-full">
-                      <Text weight="bold">A3</Text>
-                      <Text variant="muted">Medium</Text>
+                      <Text weight="bold">Medium</Text>
+                      <Text variant="muted">A3 paper</Text>
                     </div>
                   </RadioCards.Item>
                 </RadioCards.Root>
@@ -180,13 +180,13 @@ function App(): JSX.Element {
                   <RadioCards.Item value="white" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "White" }}>
                     <div className="flex flex-col w-full">
                       <Text weight="bold">White</Text>
-                      <Text variant="muted">(coming soon)</Text>
+                      <Text variant="muted" size="xs">(coming soon)</Text>
                     </div>
                   </RadioCards.Item>
                   <RadioCards.Item value="dark" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Dark" }}>
                     <div className="flex flex-col w-full">
                       <Text weight="bold">Dark</Text>
-                      <Text variant="muted">(coming soon)</Text>
+                      <Text variant="muted" size="xs">(coming soon)</Text>
                     </div>
                   </RadioCards.Item>
                 </RadioCards.Root>
@@ -195,28 +195,28 @@ function App(): JSX.Element {
               <div className="mb-4">
                 <p>Paper Style:</p>
                 <RadioCards.Root value={paperStyle} onValueChange={setPaperStyle} columns={{ initial: "1", sm: "3" }}>
-                  <RadioCards.Item value="lines" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Lines" }}>
+                  <RadioCards.Item value="lines" disabled >
                     <div className="flex flex-col w-full">
                       <Text weight="bold">Lines</Text>
-                      <Text variant="muted">(coming soon)</Text>
+                      <Text variant="muted" size="xs">(coming soon)</Text>
                     </div>
                   </RadioCards.Item>
-                  <RadioCards.Item value="squares" image={{ src: "/placeholder.svg?height=48&width=48", alt: "Squares" }}>
+                  <RadioCards.Item value="squares" >
                     <div className="flex flex-col w-full">
                       <Text weight="bold">Squares</Text>
                     </div>
                   </RadioCards.Item>
-                  <RadioCards.Item value="plain" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Plain" }}>
+                  <RadioCards.Item value="plain" disabled >
                     <div className="flex flex-col w-full">
                       <Text weight="bold">Plain</Text>
-                      <Text variant="muted">(coming soon)</Text>
+                      <Text variant="muted" size="xs">(coming soon)</Text>
                     </div>
                   </RadioCards.Item>
-                  <RadioCards.Item value="cornell" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Cornell" }}>
+                  <RadioCards.Item value="cornell" disabled >
                     <div className="flex flex-col w-full">
                       <Text weight="bold">Cornell</Text>
-                      <Text variant="muted">(best for study)</Text>
-                      <Text variant="muted">(coming soon)</Text>
+                      <Text variant="muted" size="xs">(best for study)</Text>
+                      <Text variant="muted" size="xs">(coming soon)</Text>
                     </div>
                   </RadioCards.Item>
                 </RadioCards.Root>

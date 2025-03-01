@@ -25,7 +25,7 @@ const RadioCardsRoot = React.forwardRef<
     columns["2xl"] && `2xl:grid-cols-${columns["2xl"]}`,
   )
 
-  return <RadioGroupPrimitive.Root className={cn("grid gap-3", gridCols, className)} {...props} ref={ref} />
+  return <RadioGroupPrimitive.Root className={cn("flex flex-wrap gap-2", className)} {...props} ref={ref} />
 })
 RadioCardsRoot.displayName = RadioGroupPrimitive.Root.displayName
 
@@ -42,23 +42,25 @@ const RadioCardsItem = React.forwardRef<
   <RadioGroupPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex items-start rounded-md border-2 border-muted bg-popover p-4 cursor-pointer hover:bg-accent hover:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary",
+      "relative flex items-center rounded-md border border-muted bg-popover p-2 cursor-pointer hover:bg-accent hover:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary",
       className,
     )}
     {...props}
   >
     {image && (
-      <div className="flex-shrink-0 mr-4">
+      <div className="flex-shrink-0 mr-2">
         <img
           src={image.src || "/placeholder.svg"}
           alt={image.alt}
-          width={48}
-          height={48}
+          width={32}
+          height={32}
           className="rounded-md object-cover"
         />
       </div>
     )}
-    <div>{children}</div>
+    <div className="flex flex-col">
+      {children}
+    </div>
     <RadioGroupPrimitive.Indicator className="absolute inset-0" />
   </RadioGroupPrimitive.Item>
 ))
@@ -68,4 +70,3 @@ export const RadioCards = {
   Root: RadioCardsRoot,
   Item: RadioCardsItem,
 }
-

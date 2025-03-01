@@ -10,6 +10,7 @@ const textVariants = cva("", {
     },
     size: {
       default: "text-base",
+      xs: "text-xs",
       sm: "text-sm",
       lg: "text-lg",
     },
