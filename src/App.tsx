@@ -224,7 +224,7 @@ function App(): JSX.Element {
 
           <section style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
             {/*
-              Left side: Personalization card
+              Left side: Personalization card TODO: USE https://www.radix-ui.com/themes/docs/components/radio-cards
             */}
             <article style={{
               flex: '1 1 300px',
