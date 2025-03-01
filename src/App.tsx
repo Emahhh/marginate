@@ -6,7 +6,9 @@ import { RadioCards } from "@/components/ui/radio-cards";
 import { Text } from "@/components/ui/text";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { createMergedPdf, getBackgroundPdfUrl } from './utils/pdfUtils';
+import { LineMdFilePlus } from "@/components/icons/LineMdFilePlus";
+
+import { createMergedPdf, getBackgroundPdfUrl } from '@/utils/pdfUtils';
 
 function App(): JSX.Element {
   const [step, setStep] = useState(1);
@@ -138,17 +140,21 @@ function App(): JSX.Element {
         <Card className="p-6 max-w-md mx-auto">
           <h2 className="text-xl font-bold mb-4">Choose a PDF</h2>
           <p className="text-sm text-gray-500 mb-4">Select a PDF file to add margins to.</p>
-
+      
+          <label htmlFor="pdf-upload" className="bg-primary text-primary-foreground shadow-xs hover:bg-primary/90                    inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive                 h-10 rounded-md px-6 has-[>svg]:px-4">
+            <LineMdFilePlus className="mr-2 size-5" />
+            Choose File
+          </label>
           <Input
             id="pdf-upload"
             type="file"
             accept="application/pdf"
             onChange={handleBackgroundUpload}
-            className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            style={{ color: 'transparent' }}
+            className="hidden"
           />
         </Card>
       )}
+      
 
 
 
