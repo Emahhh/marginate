@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 import type { SVGProps } from 'react';
 
 export function LineMdFilePlus(props: SVGProps<SVGSVGElement>) {

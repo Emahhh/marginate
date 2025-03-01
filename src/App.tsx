@@ -96,24 +96,6 @@ function App(): JSX.Element {
     }
   };
 
-  const handleOpenInNewTab = async () => {
-    try {
-      const pdfBytes = await createMergedPdf(
-        chosenBackgroundUrl,
-        null,
-        "",
-        foregroundFileBytes,
-        Infinity,
-        includeWatermark
-      );
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    } catch (err) {
-      alert("Could not open PDF in new tab. Check console for details.");
-    }
-  };
-
 
 
 
@@ -184,16 +166,16 @@ function App(): JSX.Element {
       */}
       {step === 2 && (
         <>
-          <a href="#" onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="text-sm text-gray-500 mb-4 block">
-            ← use another PDF
-          </a>
 
+          <button onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="text-sm text-secondary-foreground block px-2 pb-1">
+            ← use another PDF
+          </button>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card className="p-6">
               <h2 className='text-2xl font-bold mb-4'>Personalize</h2>
 
               <div className="mb-4">
-                <p>Margin Size:</p>
+                <p className='personalize-option-title'>Margin Size:</p>
                 <RadioCards.Root value={paperSize} onValueChange={setPaperSize} columns={{ initial: "1", sm: "3" }}>
                   <RadioCards.Item value="a1">
                     <div className="flex flex-col w-full">
@@ -217,20 +199,20 @@ function App(): JSX.Element {
               </div>
 
               <div className="mb-4">
-                <p>Margin Color:</p>
+                <p className='personalize-option-title'>Margin Color:</p>
                 <RadioCards.Root value={marginColor} onValueChange={setMarginColor} columns={{ initial: "1", sm: "3" }}>
-                  <RadioCards.Item value="yellow" image={{ src: "/placeholder.svg?height=48&width=48", alt: "Yellow" }}>
+                  <RadioCards.Item value="yellow"> {/* TODO: mettere immagini con image={{ src: "/placeholder.svg?height=48&width=48", alt: "Yellow" } */}
                     <div className="flex flex-col w-full">
                       <Text weight="bold">Yellow</Text>
                     </div>
                   </RadioCards.Item>
-                  <RadioCards.Item value="white" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "White" }}>
+                  <RadioCards.Item value="white" disabled>
                     <div className="flex flex-col w-full">
                       <Text weight="bold">White</Text>
                       <Text variant="muted" size="xs">(coming soon)</Text>
                     </div>
                   </RadioCards.Item>
-                  <RadioCards.Item value="dark" disabled image={{ src: "/placeholder.svg?height=48&width=48", alt: "Dark" }}>
+                  <RadioCards.Item value="dark" disabled>
                     <div className="flex flex-col w-full">
                       <Text weight="bold">Dark</Text>
                       <Text variant="muted" size="xs">(coming soon)</Text>
@@ -240,7 +222,7 @@ function App(): JSX.Element {
               </div>
 
               <div className="mb-4">
-                <p>Paper Style:</p>
+              <p className='personalize-option-title'>Paper Style:</p>
                 <RadioCards.Root value={paperStyle} onValueChange={setPaperStyle} columns={{ initial: "1", sm: "3" }}>
                   <RadioCards.Item value="lines" disabled >
                     <div className="flex flex-col w-full">
@@ -279,6 +261,10 @@ function App(): JSX.Element {
               </div>
             </Card>
 
+
+
+
+            {/* RIGHT CARD WITH PREVIEW */}
             <Card className="p-6">
               <h2 className='text-2xl font-bold mb-4'>Preview</h2>
               {errorMessage && (
@@ -297,16 +283,16 @@ function App(): JSX.Element {
                 <p>No preview available.</p>
               )}
 
-              <Button onClick={handleDownload} className="mt-4 w-full">
-                <span className="mr-2">Download PDF</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-download">
+              <Button onClick={handleDownload} className="mt-2 w-full text-lg shadow-lg cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-download size-7 mt-1">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
+                <span className="mr-2">Download PDF</span>
               </Button>
 
-              <button
+{/*               <button
                 onClick={(e) => {
                   e.preventDefault();
                   handleOpenInNewTab();
@@ -314,13 +300,19 @@ function App(): JSX.Element {
                 className="mt-2 block text-center text-blue-500 hover:underline cursor-pointer"
               >
                 or Open in New Tab
-              </button>
+              </button> */}
             </Card>
+
+
+
+
           </div>
         </>
       )}
     </div>
   );
+
+  
 }
 
 export default App;
