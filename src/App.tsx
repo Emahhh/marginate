@@ -18,6 +18,9 @@ function App(): JSX.Element {
   const [paperStyle, setPaperStyle] = useState<string>("squares");
   const [includeWatermark, setIncludeWatermark] = useState<boolean>(true);
 
+
+  // HANDLE UPLOAD
+  // This function is triggered when the user selects a PDF file
   const handleBackgroundUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const fileBytes = await e.target.files[0].arrayBuffer();
@@ -28,6 +31,10 @@ function App(): JSX.Element {
     }
   };
 
+
+
+  // CALCULATE NEW BACKGROUND URL
+  // when the dependencies change, we need to return the new background URL
   const chosenBackgroundUrl = React.useMemo(() => {
     try {
       const newBackgroundUrl = getBackgroundPdfUrl(paperSize, marginColor, paperStyle);
@@ -39,6 +46,9 @@ function App(): JSX.Element {
     }
   }, [paperSize, marginColor, paperStyle]);
 
+
+
+  // GENERATE PREVIEW
   useEffect(() => {
     if (step === 2) {
       setErrorMessage("");
@@ -102,6 +112,14 @@ function App(): JSX.Element {
     }
   };
 
+
+
+
+
+
+
+
+
   return (
     <div className="container mx-auto p-4">
       <header className="text-center mb-8">
@@ -111,6 +129,11 @@ function App(): JSX.Element {
         <p className="text-lg">Add Space for Your Notes to Any PDF</p>
       </header>
 
+
+
+      {/*
+        STEP 1: UPLOAD PDF OR ENTER URL
+      */}
       {step === 1 && (
         <Card className="p-6">
           <h2 className="text-xl font-bold mb-4">Upload Your PDF or Enter URL</h2>
@@ -121,6 +144,11 @@ function App(): JSX.Element {
         </Card>
       )}
 
+
+
+      {/*
+        STEP 2: PERSONALIZE AND PREVIEW
+      */}
       {step === 2 && (
         <>
           <a href="#" onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="text-sm text-gray-500 mb-4 block">
