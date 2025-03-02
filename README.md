@@ -10,6 +10,12 @@ How to try it:
 # Appunti per lo sviluppo
 - Documentazione di pdf-lib https://pdf-lib.js.org
 
+# Features possibili
+
+- sfondo bianco per pdf bianchi
+- ruota sfondo in verticale
+- se height o width del foreground è maggiore di quella del background, allora il background viene ridimensionato per adattarsi
+
 # Marketing
 "i want a tagline that is catchy and explains in short what the app does, which is adding margins to your pdfs like slides, so that yo can take notes easily. generate many taglines and choose the best one"
 Here are some tagline suggestions that highlight the app's functionality of adding margins for note-taking:

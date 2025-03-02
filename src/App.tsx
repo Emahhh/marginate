@@ -110,7 +110,7 @@ function App(): JSX.Element {
         <h1 onClick={() => window.location.reload()} className="text-3xl font-bold cursor-pointer">
           Marginate
         </h1>
-        <p className="text-lg">Add Space for Your Notes to Any PDF</p>
+        <p className="text-lg uppercase">Add space for your notes to any PDF</p>
       </header>
 
 
@@ -140,7 +140,7 @@ function App(): JSX.Element {
           onDragLeave={() => setIsDragging(false)}
         >
           <div>
-            <h2 className="text-2xl font-bold text-center">Choose a PDF</h2>
+            <h2 className="text-2xl font-bold text-center">Choose a PDF to start</h2>
             <p className="text-sm text-gray-600 mb-6 text-center">Select a PDF file to add margins to.</p>
           </div>
         
