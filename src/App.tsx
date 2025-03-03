@@ -89,6 +89,7 @@ function App(): JSX.Element {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
       link.download = "marginate-merged.pdf";
+      console.info('Downloading PDF with URL:' + link.href + ' and filename:' + link.download);
       link.click();
     } catch (err) {
       console.error(err);

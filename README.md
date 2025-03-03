@@ -10,7 +10,13 @@ How to try it:
 # Appunti per lo sviluppo
 - Documentazione di pdf-lib https://pdf-lib.js.org
 
-# Features possibili
+# Features possibili TODO:
+
+Implementare share button per condividere da menù di iOS in questo modo:
+- la React app, alla sua apertura e ad intervalli regolari, controlla se esiste ad un certo path un file pdf con nome specifico (es. "sharedPdfByOs.pdf")
+  - Oppure: la React app controlla se nell'URL ci sono parametri che indicano un file da scaricare (non so se fattibile)
+- Dopo essere stato usato, il file può essere cancellato (come sapere se è stato usato? Con Native bridge? Oppure anche se è più vecchio di 5 minuti?)
+- La React app ora usa il file esattamente come se fosse stato caricato
 
 - sfondo bianco per pdf bianchi
 - ruota sfondo in verticale
