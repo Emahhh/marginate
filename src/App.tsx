@@ -97,6 +97,25 @@ function App(): JSX.Element {
     }
   };
 
+    const handleOpenInCurrentTab = async () => {
+      try {
+        const pdfBytes = await createMergedPdf(
+          chosenBackgroundUrl,
+          null,
+          "",
+          foregroundFileBytes,
+          Infinity,
+          includeWatermark
+        );
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        window.location.href = url;
+      } catch (err) {
+        console.error(err);
+        alert("An error occurred while creating the PDF. Check console for details.");
+      }
+    };
+
 
 
 
@@ -285,24 +304,23 @@ function App(): JSX.Element {
               )}
 
               <Button onClick={handleDownload} className="mt-2 w-full text-lg shadow-lg cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-download size-7 mt-1">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="7 10 12 15 17 10"></polyline>
-                  <line x1="12" y1="15" x2="12" y2="3"></line>
-                </svg>
-                <span className="mr-2">Download PDF</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M6 22q-.825 0-1.412-.587T4 20V4q0-.825.588-1.412T6 2h7.175q.4 0 .763.15t.637.425l4.85 4.85q.275.275.425.638t.15.762V13q0 .425-.288.713T19 14t-.712-.288T18 13V9h-4q-.425 0-.712-.288T13 8V4H6v16h8q.425 0 .713.288T15 21t-.288.713T14 22zm13-2.575v1.225q0 .425-.288.713T18 21.65t-.712-.287T17 20.65V17q0-.425.288-.712T18 16h3.65q.425 0 .713.288t.287.712t-.287.713t-.713.287H20.4l2.25 2.25q.275.275.275.688t-.275.712q-.3.3-.712.3t-.713-.3zM6 20V4z"/></svg>
+                <span className="mr-2">Open PDF</span>
+                {/* TODO:  explain che devono fare share per salvare */  }
               </Button>
 
 {/*               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  handleOpenInNewTab();
+                  handleOpenInCurrentTab();
                 }}
                 className="mt-2 block text-center text-blue-500 hover:underline cursor-pointer"
               >
-                or Open in New Tab
-              </button> */}
-            </Card>
+                or Open in current tab
+              </button>
+            */}
+
+            </Card> 
 
 
 
