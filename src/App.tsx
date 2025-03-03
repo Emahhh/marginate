@@ -97,24 +97,24 @@ function App(): JSX.Element {
     }
   };
 
-    const handleOpenInCurrentTab = async () => {
-      try {
-        const pdfBytes = await createMergedPdf(
-          chosenBackgroundUrl,
-          null,
-          "",
-          foregroundFileBytes,
-          Infinity,
-          includeWatermark
-        );
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        window.location.href = url;
-      } catch (err) {
-        console.error(err);
-        alert("An error occurred while creating the PDF. Check console for details.");
-      }
-    };
+/*   const handleOpenInCurrentTab = async () => {
+    try {
+      const pdfBytes = await createMergedPdf(
+        chosenBackgroundUrl,
+        null,
+        "",
+        foregroundFileBytes,
+        Infinity,
+        includeWatermark
+      );
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      window.location.href = url;
+    } catch (err) {
+      console.error(err);
+      alert("An error occurred while creating the PDF. Check console for details.");
+    }
+  }; */
 
 
 
