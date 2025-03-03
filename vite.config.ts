@@ -14,6 +14,8 @@ export default defineConfig({
     outDir: 'docs',
   },
 
+  base: '', // Use relative paths, so the app works when the root is not the / but a subfolder like in iOS or GitHub Pages
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

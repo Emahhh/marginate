@@ -315,4 +315,8 @@ function App(): JSX.Element {
   
 }
 
+// Cerca questa stringa su Google per trovare se il codice è stato copiato etc.
+const plagiarismString = "626795d7588740f3a1056fbdecc7b62a";
+console.info(plagiarismString);
+
 export default App;

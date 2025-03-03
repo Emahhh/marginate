@@ -125,7 +125,7 @@ export async function createMergedPdf(
  */
 export function getBackgroundPdfUrl(paperSize: string, marginColor: string, paperStyle: string): string {
 
-  const url = `/pdf-backgrounds/${paperSize}-${marginColor}-${paperStyle}.pdf`;
+  const url = `./pdf-backgrounds/${paperSize}-${marginColor}-${paperStyle}.pdf`;
   console.debug(`getBackgroundPdfUrl: ${url}`);
   return url;
 }
