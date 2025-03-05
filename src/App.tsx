@@ -196,7 +196,7 @@ function App(): JSX.Element {
         <h1 onClick={() => window.location.reload()} className="text-3xl font-bold cursor-pointer">
           Marginate
         </h1>
-        <p className="text-lg uppercase">Add space for your notes to any PDF</p>
+        <p className="text-sm uppercase text-gray-500">Add space for your notes to any PDF</p>
       </header>
 
 
@@ -206,7 +206,7 @@ function App(): JSX.Element {
       */}
       {step === 1 && (
         <Card 
-          className={`p-8 max-w-lg mx-auto mt-40 border border-gray-200 shadow-lg rounded-lg ${isDragging ? 'border-blue-500 bg-blue-50' : ''}`}
+          className={`p-8 max-w-lg mx-auto mt-40 border-gray-400 border-1 shadow-2xl rounded-lg ${isDragging ? 'border-blue-500 bg-blue-50' : ''}`}
           onDrop={async (e) => {
             e.preventDefault();
             setIsDragging(false);
@@ -226,12 +226,12 @@ function App(): JSX.Element {
           onDragLeave={() => setIsDragging(false)}
         >
           <div>
-            <h2 className="text-2xl font-bold text-center">Choose a PDF to start</h2>
+            <h2 className="text-4xl font-bold text-center">Choose a PDF to start</h2>
             <p className="text-sm text-gray-600 mb-6 text-center">Select a PDF file to add margins to.</p>
           </div>
         
-          <div className='mx-auto'>
-            <label htmlFor="pdf-upload" className="bg-primary text-white shadow-md hover:bg-primary/90 inline-flex items-center justify-center rounded-md text-sm font-medium transition-all h-12 px-6 mb-2 w-full cursor-pointer max-w-xs mx-auto">
+            <div className='text-center'>
+            <label htmlFor="pdf-upload" className="bg-primary text-white shadow-md hover:bg-primary/90 inline-flex items-center justify-center rounded-md text-sm font-medium transition-all h-12 px-6 mb-2 cursor-pointer">
               <LineMdFilePlus className="mr-2 size-5" />
               Choose File
             </label>
@@ -242,8 +242,8 @@ function App(): JSX.Element {
               onChange={handleBackgroundUpload}
               className="hidden"
             />
-            <p className="text-sm text-gray-600 text-center">Or drag and drop the file here.</p>
-          </div>
+            <p className="text-sm text-gray-600">You can also <b>drag and drop</b> a file here<br/>or <b>share</b> a PDF from another app.</p>
+            </div>
         </Card>
       )}
       
@@ -253,105 +253,110 @@ function App(): JSX.Element {
       {step === 2 && (
         <>
 
-          <button onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="text-sm text-secondary-foreground block px-2 pb-1">
+          <button onClick={(e) => { e.preventDefault(); window.location.reload(); }} className="text-secondary-foreground block px-2 pb-1 cursor-pointer">
             ← use another PDF
           </button>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Card className="p-6">
+            <Card className="p-6 shadow-xl border-gray-400 border-1">
               <h2 className='text-2xl font-bold mb-4'>Personalize</h2>
 
               <div className="mb-4">
-                <p className='personalize-option-title'>Margin Size:</p>
-                <RadioCards.Root value={paperSize} onValueChange={setPaperSize} columns={{ initial: "1", sm: "3" }}>
-                  <RadioCards.Item value="a1">
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Very big</Text>
-                      <Text variant="muted">A1 paper</Text>
-                    </div>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="a2">
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Big</Text>
-                      <Text variant="muted">A2 paper</Text>
-                    </div>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="a3">
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Medium</Text>
-                      <Text variant="muted">A3 paper</Text>
-                    </div>
-                  </RadioCards.Item>
-                </RadioCards.Root>
+              <p className='personalize-option-title'>Margin Size:</p>
+              <RadioCards.Root value={paperSize} onValueChange={setPaperSize} columns={{ initial: "1", sm: "3" }}>
+                <RadioCards.Item value="a1">
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Very big</Text>
+                  <Text variant="muted">A1 paper</Text>
+                </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="a2">
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Big</Text>
+                  <Text variant="muted">A2 paper</Text>
+                </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="a3">
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Medium</Text>
+                  <Text variant="muted">A3 paper</Text>
+                </div>
+                </RadioCards.Item>
+              </RadioCards.Root>
               </div>
 
+              <hr className="border-t-1 border-gray-200" />
+
               <div className="mb-4">
-                <p className='personalize-option-title'>Margin Color:</p>
-                <RadioCards.Root value={marginColor} onValueChange={setMarginColor} columns={{ initial: "1", sm: "3" }}>
-                  <RadioCards.Item value="yellow"> {/* TODO: mettere immagini con image={{ src: "/placeholder.svg?height=48&width=48", alt: "Yellow" } */}
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Yellow</Text>
-                    </div>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="white" disabled>
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">White</Text>
-                      <Text variant="muted" size="xs">(coming soon)</Text>
-                    </div>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="dark" disabled>
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Dark</Text>
-                      <Text variant="muted" size="xs">(coming soon)</Text>
-                    </div>
-                  </RadioCards.Item>
-                </RadioCards.Root>
+              <p className='personalize-option-title'>Margin Color:</p>
+              <RadioCards.Root value={marginColor} onValueChange={setMarginColor} columns={{ initial: "1", sm: "3" }}>
+                <RadioCards.Item value="yellow"> {/* TODO: mettere immagini con image={{ src: "/placeholder.svg?height=48&width=48", alt: "Yellow" } */}
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Yellow</Text>
+                </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="white" disabled>
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">White</Text>
+                  <Text variant="muted" size="xs">(coming soon)</Text>
+                </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="dark" disabled>
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Dark</Text>
+                  <Text variant="muted" size="xs">(coming soon)</Text>
+                </div>
+                </RadioCards.Item>
+              </RadioCards.Root>
               </div>
+
+              <hr className="border-t-1 border-gray-200" />
 
               <div className="mb-4">
               <p className='personalize-option-title'>Paper Style:</p>
-                <RadioCards.Root value={paperStyle} onValueChange={setPaperStyle} columns={{ initial: "1", sm: "3" }}>
-                  <RadioCards.Item value="lines" disabled >
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Lines</Text>
-                      <Text variant="muted" size="xs">(coming soon)</Text>
-                    </div>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="squares" >
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Squares</Text>
-                    </div>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="plain" disabled >
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Plain</Text>
-                      <Text variant="muted" size="xs">(coming soon)</Text>
-                    </div>
-                  </RadioCards.Item>
-                  <RadioCards.Item value="cornell" disabled >
-                    <div className="flex flex-col w-full">
-                      <Text weight="bold">Cornell</Text>
-                      <Text variant="muted" size="xs">(best for study)</Text>
-                      <Text variant="muted" size="xs">(coming soon)</Text>
-                    </div>
-                  </RadioCards.Item>
-                </RadioCards.Root>
+              <RadioCards.Root value={paperStyle} onValueChange={setPaperStyle} columns={{ initial: "1", sm: "3" }}>
+                <RadioCards.Item value="lines" disabled >
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Lines</Text>
+                  <Text variant="muted" size="xs">(coming soon)</Text>
+                </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="squares" >
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Squares</Text>
+                </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="plain" disabled >
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Plain</Text>
+                  <Text variant="muted" size="xs">(coming soon)</Text>
+                </div>
+                </RadioCards.Item>
+                <RadioCards.Item value="cornell" disabled >
+                <div className="flex flex-col w-full">
+                  <Text weight="bold">Cornell</Text>
+                  <Text variant="muted" size="xs">(best for study)</Text>
+                  <Text variant="muted" size="xs">(coming soon)</Text>
+                </div>
+                </RadioCards.Item>
+              </RadioCards.Root>
               </div>
 
+              <hr className="border-t-1 border-gray-200" />
+
               <div className="flex items-center space-x-2 mb-4">
-                <Switch
-                  id="include-watermark"
-                  checked={includeWatermark}
-                  onCheckedChange={setIncludeWatermark}
-                />
-                <Label htmlFor="include-watermark">Add Watermark</Label>
+              <Switch
+                id="include-watermark"
+                checked={includeWatermark}
+                onCheckedChange={setIncludeWatermark}
+              />
+              <Label htmlFor="include-watermark">Add Watermark</Label>
               </div>
             </Card>
 
 
 
-
             {/* RIGHT CARD WITH PREVIEW */}
-            <Card className="p-6">
+            <Card className="p-6 shadow-xl border-gray-400 border-1">
               <h2 className='text-2xl font-bold mb-4'>Preview</h2>
               {errorMessage && (
                 <p style={{ color: 'red' }}>{errorMessage}</p>
@@ -363,19 +368,23 @@ function App(): JSX.Element {
                   src={previewUrl}
                   width="100%"
                   type="application/pdf"
-                  style={{ border: '1px solid #ccc' }}
+                  className='border-1 border-gray-400 rounded-md shadow-md'
                 />
               ) : (
                 <p>No preview available.</p>
               )}
 
-              <Button onClick={handleDownload} className="mt-2 w-full text-lg shadow-lg cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M6 22q-.825 0-1.412-.587T4 20V4q0-.825.588-1.412T6 2h7.175q.4 0 .763.15t.637.425l4.85 4.85q.275.275.425.638t.15.762V13q0 .425-.288.713T19 14t-.712-.288T18 13V9h-4q-.425 0-.712-.288T13 8V4H6v16h8q.425 0 .713.288T15 21t-.288.713T14 22zm13-2.575v1.225q0 .425-.288.713T18 21.65t-.712-.287T17 20.65V17q0-.425.288-.712T18 16h3.65q.425 0 .713.288t.287.712t-.287.713t-.713.287H20.4l2.25 2.25q.275.275.275.688t-.275.712q-.3.3-.712.3t-.713-.3zM6 20V4z"/></svg>
-                <span className="mr-2">Open PDF</span>
-                {/* TODO:  explain che devono fare share per salvare */  }
-              </Button>
+              <div>
+                <Button onClick={handleDownload} className="mt-2 w-full text-lg shadow-lg cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M6 22q-.825 0-1.412-.587T4 20V4q0-.825.588-1.412T6 2h7.175q.4 0 .763.15t.637.425l4.85 4.85q.275.275.425.638t.15.762V13q0 .425-.288.713T19 14t-.712-.288T18 13V9h-4q-.425 0-.712-.288T13 8V4H6v16h8q.425 0 .713.288T15 21t-.288.713T14 22zm13-2.575v1.225q0 .425-.288.713T18 21.65t-.712-.287T17 20.65V17q0-.425.288-.712T18 16h3.65q.425 0 .713.288t.287.712t-.287.713t-.713.287H20.4l2.25 2.25q.275.275.275.688t-.275.712q-.3.3-.712.3t-.713-.3zM6 20V4z"/></svg>
+                  <span className="mr-2">Open PDF</span>
+                  {/* TODO:  explain che devono fare share per salvare */  }
+                </Button>
+                <p className="text-sm text-gray-600 mb-6 mt-2 text-center">You can then share the PDF to save it.</p>
+              </div>
 
-{/*               <button
+            {/*        
+              <button
                 onClick={(e) => {
                   e.preventDefault();
                   handleOpenInCurrentTab();
