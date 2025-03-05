@@ -22,7 +22,7 @@ async function fetchPdfBytesOrFile(
     }
     const response = await fetch(trimmedUrl);
     if (!response.ok) {
-      console.error(`The response code was not ok. The response code was ${response.status} for the request for ${trimmedUrl}, with statusText: ${response.statusText}. This might happen if you're not using a server, but you're serving files using the file:// protocol, for example in iOS!!!.`);
+      console.warn(`The response code was not ok. The response code was ${response.status} for the request for ${trimmedUrl}, with statusText: ${response.statusText}. This might happen if you're not using a server, but you're serving files using the file:// protocol, for example in iOS!!!.`);
       // continuo la esecuzione, perché potrebbe non essere un errore, ma un warning, quando sto usando iOS
     }
     const arrayBuffer = await response.arrayBuffer();

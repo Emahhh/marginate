@@ -10,22 +10,28 @@ import { LineMdFilePlus } from "@/components/icons/LineMdFilePlus";
 
 import { createMergedPdf, getBackgroundPdfUrl } from '@/utils/pdfUtils';
 
-
-
-// tipo per aggiungere la funzione handleSharedPDF al window
 declare global {
   interface Window {
-    handleSharedPDF: (fileURL: string) => void;
+    setTempDirectoryPath: (fileURL: string) => void;
+    tempDirectoryPath: string;
+    notifySharedPDF: () => void;
+
+    webkit?: {
+      messageHandlers: {
+        deleteFile: {
+          postMessage: (path: string) => void;
+        };
+      };
+    };
   }
+
 }
 
-// questa funzione viene chiamata direttamente da Swift quando viene condiviso un file PDF
-// mando una notifica alla React app quando viene condiviso un file PDF
-window.handleSharedPDF = (fileURL) => {
-  window.dispatchEvent(new CustomEvent('sharedPDF', { detail: fileURL }));
+window.setTempDirectoryPath = function(path) {
+  // Save the path to use it later in your app
+  window.tempDirectoryPath = "file://" + path;
+  console.log("Temporary directory path set to:", window.tempDirectoryPath);
 };
-
-
 
 function App(): JSX.Element {
   const [step, setStep] = useState(1);
@@ -39,7 +45,6 @@ function App(): JSX.Element {
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   // HANDLE UPLOAD
-  // This function is triggered when the user selects a PDF file
   const handleBackgroundUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const fileBytes = await e.target.files[0].arrayBuffer();
@@ -51,33 +56,48 @@ function App(): JSX.Element {
   };
 
 
-  // listener per l'evento 'sharedPDF'
-  useEffect(() => {
+  async function lookForSharedPdf() {
+    if (window.tempDirectoryPath) {
+      const sharedPdfPath = `${window.tempDirectoryPath}/shared-pdf.pdf`;
+      console.info("Polling for shared PDF at:", sharedPdfPath);
 
-    // funzione che gestisce l'evento 'sharedPDF'
-    const onSharedPDF = async (e : any) => {
-      const fileURL = e.detail; // fileURL ricevuto dal native bridge
-      console.info("onSharedPDF: Received shared PDF file URL:", fileURL);
       try {
-        // Fetch del file PDF tramite il file URL
-        const response = await fetch(fileURL);
+        const response = await fetch(sharedPdfPath);
+
+        if (!response.ok) {
+          console.warn(`The response code was not ok. The response code was ${response.status} for the request for ${sharedPdfPath}, with statusText: ${response.statusText}. This might happen if you're not using a server, but you're serving files using the file:// protocol, for example in iOS!!!.`);
+          // continuo la esecuzione, perché potrebbe non essere un errore, ma un warning, quando sto usando iOS
+        }
         const arrayBuffer = await response.arrayBuffer();
-        
-        // Simula l'upload: imposta lo stato come se l'utente avesse caricato il PDF
-        setForegroundFileBytes(arrayBuffer);
-        setStep(2); // Passa allo step successivo per la personalizzazione/preview
+        if (arrayBuffer.byteLength === 0) {
+          console.error(`Fetched PDF is empty`);
+          throw new Error(`Fetched PDF is empty`);
+        } else {
+          console.info("Shared PDF found:", sharedPdfPath);
+          setForegroundFileBytes(arrayBuffer);
+          setStep(2); // Proceed to the next step for customization/preview
+
+          // Call the native bridge to delete the file, now that we have fetched it
+          const sharedPdfPathWithoutProtocol = sharedPdfPath.replace("file://", "");
+          window.webkit?.messageHandlers?.deleteFile?.postMessage(sharedPdfPathWithoutProtocol) ?? console.warn("deleteFile handler is undefined");
+        }
       } catch (error) {
-        console.error("Errore durante la gestione del PDF condiviso:", error);
+        console.error("Error during polling for shared PDF:", error);
       }
-    };
+    }
+  }
 
-    // Aggiungi listener per il custom event: chiama la funzione onSharedPDF quando viene ricevuto un evento 'sharedPDF'
-    window.addEventListener('sharedPDF', onSharedPDF);
-    
-    // Rimuovi listener al cleanup del componente
-    return () => window.removeEventListener('sharedPDF', onSharedPDF);
+
+  
+  window.notifySharedPDF = function() {
+    lookForSharedPdf();
+  };
+
+  // Polling for the shared PDF file
+  useEffect(() => {
+    const intervalId = setInterval(lookForSharedPdf, 1000); // Poll every 5 seconds
+    return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
-
 
 
 
