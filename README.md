@@ -12,8 +12,11 @@ How to try it:
 
 # Features possibili TODO:
 
+-  cambiare <key>NSExtensionActivationRule</key> in modo che la extension compaia solo per PDFs
+
+
 Implementare share button per condividere da menù di iOS in questo modo:
-- la React app, alla sua apertura e ad intervalli regolari, controlla se esiste ad un certo path un file pdf con nome specifico (es. "sharedPdfByOs.pdf")
+- la React app, alla sua apertura e ad intervalli regolari, controlla se esiste ad un certo path un file pdf con nome specifico (es. "/ios-shared-marginate/shared-pdf-by-ios.pdf")
   - Oppure: la React app controlla se nell'URL ci sono parametri che indicano un file da scaricare (non so se fattibile)
 - Dopo essere stato usato, il file può essere cancellato (come sapere se è stato usato? Con Native bridge? Oppure anche se è più vecchio di 5 minuti?)
 - La React app ora usa il file esattamente come se fosse stato caricato

@@ -10,6 +10,23 @@ import { LineMdFilePlus } from "@/components/icons/LineMdFilePlus";
 
 import { createMergedPdf, getBackgroundPdfUrl } from '@/utils/pdfUtils';
 
+
+
+// tipo per aggiungere la funzione handleSharedPDF al window
+declare global {
+  interface Window {
+    handleSharedPDF: (fileURL: string) => void;
+  }
+}
+
+// questa funzione viene chiamata direttamente da Swift quando viene condiviso un file PDF
+// mando una notifica alla React app quando viene condiviso un file PDF
+window.handleSharedPDF = (fileURL) => {
+  window.dispatchEvent(new CustomEvent('sharedPDF', { detail: fileURL }));
+};
+
+
+
 function App(): JSX.Element {
   const [step, setStep] = useState(1);
   const [foregroundFileBytes, setForegroundFileBytes] = useState<ArrayBuffer | null>(null);
@@ -32,6 +49,35 @@ function App(): JSX.Element {
       setForegroundFileBytes(null);
     }
   };
+
+
+  // listener per l'evento 'sharedPDF'
+  useEffect(() => {
+
+    // funzione che gestisce l'evento 'sharedPDF'
+    const onSharedPDF = async (e : any) => {
+      const fileURL = e.detail; // fileURL ricevuto dal native bridge
+      console.info("onSharedPDF: Received shared PDF file URL:", fileURL);
+      try {
+        // Fetch del file PDF tramite il file URL
+        const response = await fetch(fileURL);
+        const arrayBuffer = await response.arrayBuffer();
+        
+        // Simula l'upload: imposta lo stato come se l'utente avesse caricato il PDF
+        setForegroundFileBytes(arrayBuffer);
+        setStep(2); // Passa allo step successivo per la personalizzazione/preview
+      } catch (error) {
+        console.error("Errore durante la gestione del PDF condiviso:", error);
+      }
+    };
+
+    // Aggiungi listener per il custom event: chiama la funzione onSharedPDF quando viene ricevuto un evento 'sharedPDF'
+    window.addEventListener('sharedPDF', onSharedPDF);
+    
+    // Rimuovi listener al cleanup del componente
+    return () => window.removeEventListener('sharedPDF', onSharedPDF);
+  }, []);
+
 
 
 
