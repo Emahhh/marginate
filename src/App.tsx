@@ -84,6 +84,8 @@ function App(): JSX.Element {
       } catch (error) {
         console.error("Error during polling for shared PDF:", error);
       }
+    } else {
+      console.warn("Temporary directory path is not set. Cannot run lookForSharedPdf() yet.");
     }
   }
 
@@ -93,11 +95,11 @@ function App(): JSX.Element {
     lookForSharedPdf();
   };
 
-  // Polling for the shared PDF file
+/*   // Polling for the shared PDF file
   useEffect(() => {
     const intervalId = setInterval(lookForSharedPdf, 1000); // Poll every 5 seconds
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
-  }, []);
+  }, []); */
 
 
 
