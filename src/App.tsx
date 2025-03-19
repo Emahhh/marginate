@@ -36,6 +36,7 @@ window.setTempDirectoryPath = function(path) {
 function App(): JSX.Element {
   const [step, setStep] = useState(1);
   const [foregroundFileBytes, setForegroundFileBytes] = useState<ArrayBuffer | null>(null);
+  const [foregroundFileName, setForegroundFileName] = useState<string>("");
   const [previewUrl, setPreviewUrl] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [paperSize, setPaperSize] = useState<string>("a2");
@@ -47,8 +48,10 @@ function App(): JSX.Element {
   // HANDLE UPLOAD
   const handleBackgroundUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const fileBytes = await e.target.files[0].arrayBuffer();
+      const file = e.target.files[0];
+      const fileBytes = await file.arrayBuffer();
       setForegroundFileBytes(fileBytes);
+      setForegroundFileName(file.name.replace(/\.pdf$/i, "")); // Remove .pdf extension
       setStep(2); // Automatically proceed to the next step
     } else {
       setForegroundFileBytes(null);
@@ -156,7 +159,8 @@ function App(): JSX.Element {
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      link.download = "marginate-merged.pdf";
+      const fallbackName = "added-margins-using-marginate.pdf";
+      link.download = foregroundFileName ? `${foregroundFileName}-marginate.pdf` : fallbackName;
       console.info('Downloading PDF with URL:' + link.href + ' and filename:' + link.download);
       link.click();
     } catch (err) {

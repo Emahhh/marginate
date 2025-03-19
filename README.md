@@ -22,10 +22,13 @@ FARE MARKETING
   [] post su reddit
   [] capire dove altro postare
 
-[] nome del pdf output same as originale
 [] se height o width del foreground è maggiore di quella del background, allora il background viene ridimensionato per adattarsi
 [] sfondo bianco per pdf bianchi
 [] add posthog
 [] ruota sfondo in verticale
 [] share extension quella lunga di iOS
 [] migliorare grafica in modo che si capisca come funziona la app quando la apri
+[] migliora watermark
+
+DONE:
+[x] nome del pdf output same as originale

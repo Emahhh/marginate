@@ -1,6 +1,6 @@
 // This file contains utility functions for PDF operations, unrelated to UI or React.
 
-import { PDFDocument, PDFPage, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, PDFName, PDFString, rgb, StandardFonts, PDFArray, PDFPage } from 'pdf-lib';
 
 /**
  * Fetches PDF content either from a URL or local file bytes.
@@ -87,28 +87,99 @@ export async function createMergedPdf(
       height: newPage.getHeight(),
     });
 
-    // Center the "foreground" page
-    const centerX = (newPage.getWidth() - embeddedForeground.width) / 2;
-    const centerY = (newPage.getHeight() - embeddedForeground.height) / 2;
+    // Center the "foreground" page with proper spacing
+    const margin = 20; // Add a margin to avoid overlapping
+    const availableWidth = newPage.getWidth() - 2 * margin;
+    const availableHeight = newPage.getHeight() - 2 * margin;
+
+    const scale = Math.min(
+      availableWidth / embeddedForeground.width,
+      availableHeight / embeddedForeground.height
+    );
+
+    const scaledWidth = embeddedForeground.width * scale;
+    const scaledHeight = embeddedForeground.height * scale;
+
+    const centerX = (newPage.getWidth() - scaledWidth) / 2;
+    const centerY = (newPage.getHeight() - scaledHeight) / 2;
+
     newPage.drawPage(embeddedForeground, {
       x: centerX,
       y: centerY,
-      width: embeddedForeground.width,
-      height: embeddedForeground.height,
+      width: scaledWidth,
+      height: scaledHeight,
     });
 
     // Optionally add a watermark
     if (includeWatermark) {
-      const watermarkText = "Add margins to help you take notes using marginate";
+      const watermarkText1 = "Add margins to your documents using Marginate";
+      const watermarkText2 = "Download from the App Store or at marginate.emanuele.click";
       const textSize = 10;
-      const textWidth = helveticaFont.widthOfTextAtSize(watermarkText, textSize);
-      newPage.drawText(watermarkText, {
-        x: newPage.getWidth() - textWidth - 10,
+      const textWidth1 = helveticaFont.widthOfTextAtSize(watermarkText1, textSize);
+      const textWidth2 = helveticaFont.widthOfTextAtSize(watermarkText2, textSize);
+      const linkUrl = "http://marginate.emanuele.click";
+
+      // Draw the first line of the watermark text
+      newPage.drawText(watermarkText1, {
+        x: newPage.getWidth() - textWidth1 - 10,
+        y: 20,
+        size: textSize,
+        font: helveticaFont,
+        color: rgb(0.5, 0.5, 0.5),
+      });
+
+      // Draw the second line of the watermark text
+      newPage.drawText(watermarkText2, {
+        x: newPage.getWidth() - textWidth2 - 10,
         y: 10,
         size: textSize,
         font: helveticaFont,
         color: rgb(0.5, 0.5, 0.5),
       });
+
+      // Create a clickable link annotation for the first line
+      const linkAnnotation1 = resultPdfDoc.context.obj({
+        Type: 'Annot',
+        Subtype: 'Link',
+        Rect: [
+          newPage.getWidth() - textWidth1 - 10,
+          20,
+          newPage.getWidth() - 10,
+          20 + textSize + 2,
+        ],
+        Border: [0, 0, 0],
+        A: {
+          Type: 'Action',
+          S: 'URI',
+          URI: PDFString.of(linkUrl),
+        },
+      });
+      const linkAnnotationRef1 = resultPdfDoc.context.register(linkAnnotation1);
+
+      // Create a clickable link annotation for the second line
+      const linkAnnotation2 = resultPdfDoc.context.obj({
+        Type: 'Annot',
+        Subtype: 'Link',
+        Rect: [
+          newPage.getWidth() - textWidth2 - 10,
+          10,
+          newPage.getWidth() - 10,
+          10 + textSize + 2,
+        ],
+        Border: [0, 0, 0],
+        A: {
+          Type: 'Action',
+          S: 'URI',
+          URI: PDFString.of(linkUrl),
+        },
+      });
+      const linkAnnotationRef2 = resultPdfDoc.context.register(linkAnnotation2);
+
+      // Add the link annotations to the page
+      const annotations = newPage.node.lookup(PDFName.of('Annots'), PDFArray) || resultPdfDoc.context.obj([]);
+      annotations.push(linkAnnotationRef1);
+      annotations.push(linkAnnotationRef2);
+      newPage.node.set(PDFName.of('Annots'), annotations);
     }
   }
 
