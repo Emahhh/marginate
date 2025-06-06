@@ -92,9 +92,15 @@ export async function createMergedPdf(
     const availableWidth = newPage.getWidth() - 2 * margin;
     const availableHeight = newPage.getHeight() - 2 * margin;
 
+    // Ensure the foreground pdf is always at least 35% smaller in both width and height, if it is not, resize
+    const maxAllowedWidth = newPage.getWidth() * 0.65;
+    const maxAllowedHeight = newPage.getHeight() * 0.65;
+
     const scale = Math.min(
       availableWidth / embeddedForeground.width,
-      availableHeight / embeddedForeground.height
+      availableHeight / embeddedForeground.height,
+      maxAllowedWidth / embeddedForeground.width,
+      maxAllowedHeight / embeddedForeground.height
     );
 
     const scaledWidth = embeddedForeground.width * scale;
