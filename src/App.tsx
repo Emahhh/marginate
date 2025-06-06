@@ -159,8 +159,8 @@ function App(): JSX.Element {
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(blob);
-      const fallbackName = "added-margins-using-marginate.pdf";
-      link.download = foregroundFileName ? `${foregroundFileName}-marginate.pdf` : fallbackName;
+      const outputFileName = foregroundFileName ? `${foregroundFileName}-marginate.pdf` : "marginate-output.pdf";
+      link.download = outputFileName;
       console.info('Downloading PDF with URL:' + link.href + ' and filename:' + link.download);
       link.click();
     } catch (err) {
@@ -220,6 +220,7 @@ function App(): JSX.Element {
             if (file && file.type === "application/pdf") {
               const fileBytes = await file.arrayBuffer();
               setForegroundFileBytes(fileBytes);
+              setForegroundFileName(file.name.replace(/\.pdf$/i, "")); // Remove .pdf extension
               setStep(2);
             } else if (file && file.type !== "application/pdf") {
               console.error("Invalid file type. Please upload a PDF file.");

@@ -22,6 +22,10 @@ FARE MARKETING
   [] post su reddit
   [] capire dove altro postare
 
+
+[] cè un bug nella versione -test? mi sembra che dei documenti li tagli boh
+[] add open source info
+[] add send feedback
 [] se height o width del foreground è maggiore di quella del background, allora il background viene ridimensionato per adattarsi
 [] sfondo bianco per pdf bianchi
 [] add posthog
@@ -32,3 +36,51 @@ FARE MARKETING
 
 DONE:
 [x] nome del pdf output same as originale
+
+
+
+
+
+
+# Marketing
+
+## Hashtags
+#iPadTips  
+#StudyWithMe
+#StudyHacks
+#iPadStudyTips
+#iPadNotes
+#iPadTok
+#ApplePencil
+#DigitalNotes  
+#DigitalNoteTaking
+#MedicalStudent
+#StudyTok
+#StudyHacks  
+#Paperless
+#CollegeTips  
+
+
+worse:
+#ProductivityTips  
+#NoteTaking  
+#StudyWithMe  
+#StudentTools  
+#StudyMotivation  
+#OrganizedLife  
+#LearnBetter  
+#AcademicSuccess  
+#StudyTools  
+#StudyInspiration
+
+
+## TikTok script n1
+If you take notes on your iPad like I do, you NEED to try this.  
+This app lets you select any PDF and add margins to it, giving you extra space to write notes next to your lecture slides.  
+It's a game changer for studying!  
+The app is called Marginate, and it's free to download on the App Store.
+
+---
+Caption:
+Name of the app: Marginate. You can download it on the App Store.
+#iPadTips #StudyWithMe #StudyHacks #iPadStudyTips #iPadNotes #iPadTok #ApplePencil #DigitalNotes #DigitalNoteTaking #MedicalStudent #StudyTok #Paperless #CollegeTips
